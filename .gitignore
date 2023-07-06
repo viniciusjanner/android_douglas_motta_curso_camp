@@ -21,15 +21,13 @@ output.json
 # IntelliJ
 *.iml
 /.idea/
+.idea/*
 misc.xml
 deploymentTargetDropDown.xml
 render.experimental.xml
 
 # Keystore files
-*.jks
-*.jks.base64.txt
-*.keystore
-*.pepk
+apikey.properties
 
 # Google Services (e.g. APIs or Firebase)
 google-services.json
