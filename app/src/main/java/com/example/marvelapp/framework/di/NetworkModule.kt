@@ -54,8 +54,7 @@ object NetworkModule {
             .build()
 
     @Provides
-    fun provideGsonConverterFactory(): GsonConverterFactory =
-        GsonConverterFactory.create()
+    fun provideGsonConverterFactory(): GsonConverterFactory = GsonConverterFactory.create()
 
     @Provides
     fun provideRetrofit(
