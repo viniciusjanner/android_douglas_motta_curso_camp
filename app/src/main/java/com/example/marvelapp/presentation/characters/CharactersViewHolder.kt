@@ -9,11 +9,11 @@ import com.example.marvelapp.R
 import com.example.marvelapp.databinding.ItemCharactersBinding
 
 class CharactersViewHolder(
-    itemCharacterBinding: ItemCharactersBinding,
-) : RecyclerView.ViewHolder(itemCharacterBinding.root) {
+    itemBinding: ItemCharactersBinding,
+) : RecyclerView.ViewHolder(itemBinding.root) {
 
-    private val textName = itemCharacterBinding.textName
-    private val imageCharacter = itemCharacterBinding.imageCharacter
+    private val textName = itemBinding.textName
+    private val imageCharacter = itemBinding.imageCharacter
 
     fun bind(character: Character) {
         textName.text = character.name
@@ -25,8 +25,9 @@ class CharactersViewHolder(
 
     companion object {
         fun create(parent: ViewGroup): CharactersViewHolder {
-            val inflate = LayoutInflater.from(parent.context)
-            val itemBinding = ItemCharactersBinding.inflate(inflate, parent, false)
+            val inflater = LayoutInflater.from(parent.context)
+            val itemBinding = ItemCharactersBinding
+                .inflate(inflater, parent, false)
             return CharactersViewHolder(itemBinding)
         }
     }

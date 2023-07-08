@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/flipperCharacters"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <include
+        android:id="@+id/includeViewCharactersLoadingState"
+        layout="@layout/include_view_characters_loading_state" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerCharacters"
@@ -15,4 +19,8 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/item_characters" />
 
-</LinearLayout>
+    <include
+        android:id="@+id/includeViewCharactersErrorState"
+        layout="@layout/include_view_characters_error_state" />
+
+</ViewFlipper>
