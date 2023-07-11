@@ -26,7 +26,7 @@ class CharactersPagingSource(
                 queries["nameStartWith"] = query
             }
 
-            val response = remoteDataSource.fechtCharacters(queries)
+            val response = remoteDataSource.fetchCharacters(queries)
 
             val responseOffset = response.data.offset
             val totalCharacters = response.data.total
