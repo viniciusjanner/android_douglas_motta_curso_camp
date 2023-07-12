@@ -1,3 +1,4 @@
 rootProject.name = "CAMP"
 include ':app'
 include ':core'
+include ':testing'
