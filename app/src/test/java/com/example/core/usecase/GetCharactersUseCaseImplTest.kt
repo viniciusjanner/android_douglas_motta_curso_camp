@@ -9,6 +9,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertNotNull
 import org.junit.Before
@@ -48,7 +49,7 @@ class GetCharactersUseCaseImplTest {
         //
         // deve validar a criação de dados de flow paging quando invoke do use case é chamada
         //
-        runTest {
+        runTest(StandardTestDispatcher()) {
             whenever(
                 repository.getCharacters(""),
             ).thenReturn(

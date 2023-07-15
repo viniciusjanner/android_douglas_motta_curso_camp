@@ -11,6 +11,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -54,7 +55,7 @@ class CharactersViewModelTest {
         //
         // deve validar os valores do objeto de dados de paginação ao chamar os personagensPagingData
         //
-        runTest {
+        runTest(StandardTestDispatcher()) {
             whenever(
                 getCharactersUseCase.invoke(any()),
             ).thenReturn(
@@ -73,7 +74,7 @@ class CharactersViewModelTest {
         //
         // deve lançar uma exceção quando a chamada para o caso de uso retornar uma exceção
         //
-        runTest {
+        runTest(StandardTestDispatcher()) {
             whenever(
                 getCharactersUseCase.invoke(any()),
             ).thenThrow(
