@@ -10,27 +10,19 @@ local.properties
 
 # Android Studio generated files and folders
 /app/debug
+/app/staging
 /app/release
-captures/
-.externalNativeBuild/
-.cxx/
 *.apk
 *.aab
-output.json
 
 # IntelliJ
 *.iml
 /.idea/
 .idea/*
-misc.xml
-deploymentTargetDropDown.xml
-render.experimental.xml
+.idea/vcs.xml
+.idea/jarRepositories.xml
+.idea/.gitignore
 
 # Keystore files
 apikey.properties
-
-# Google Services (e.g. APIs or Firebase)
-google-services.json
-
-# Android Profiling
-*.hprof
+/store
