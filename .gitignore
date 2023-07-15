@@ -9,20 +9,16 @@ local.properties
 *.log
 
 # Android Studio generated files and folders
-/app/debug
-/app/staging
-/app/release
+/app/debug/
+/app/staging/
+/app/release/
 *.apk
 *.aab
 
 # IntelliJ
 *.iml
 /.idea/
-.idea/*
-.idea/vcs.xml
-.idea/jarRepositories.xml
-.idea/.gitignore
 
 # Keystore files
 apikey.properties
-/store
+/store/
