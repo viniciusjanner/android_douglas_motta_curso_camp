@@ -18,7 +18,7 @@ android {
 
     signingConfigs {
         release {
-            storeFile file('C:/DEV/ANDROID/ME/ON/DOUGLAS_MOTTA/android_douglas_motta_curso_camp/store/marvel_app_key_store.jks')
+            storeFile file('\\..\\store\\marvel_app_key_store.jks')
             storePassword '123456'
             keyAlias 'marvel_app_key_alias'
             keyPassword '123456'
@@ -70,6 +70,13 @@ android {
 
     buildFeatures {
         viewBinding true
+    }
+
+    lintOptions {
+        lintConfig = file("$rootDir/android-lint.xml")
+        disable 'MissingTranslation'
+        disable "RtlHardcoded"
+        abortOnError true
     }
 }
 
