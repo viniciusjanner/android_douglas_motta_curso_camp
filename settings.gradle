@@ -1,2 +1,4 @@
-rootProject.name = "curso-android-marvel-app"
+rootProject.name = "CAMP"
 include ':app'
+include ':core'
+include ':testing'
