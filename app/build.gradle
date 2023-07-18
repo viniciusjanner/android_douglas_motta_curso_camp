@@ -5,6 +5,7 @@ plugins {
     id 'kotlin-parcelize'
     id 'androidx.navigation.safeargs'
     id 'dagger.hilt.android.plugin'
+    id 'com.google.gms.google-services'
 }
 
 apply from: '../config/detekt/detekt.gradle'
@@ -84,13 +85,13 @@ dependencies {
     implementation project(':core')
 
     // AndroidX
-    implementation 'androidx.core:core-ktx:1.10.1'
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation "androidx.core:core-ktx:1.10.1"
+    implementation "androidx.appcompat:appcompat:1.6.1"
+    implementation "androidx.constraintlayout:constraintlayout:2.1.4"
 
     // Material design
-    implementation 'com.google.android.material:material:1.9.0'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation "com.google.android.material:material:1.9.0"
+    implementation "androidx.legacy:legacy-support-v4:1.0.0"
 
     // Navigation
     def nav_version = '2.6.0'
@@ -124,8 +125,12 @@ dependencies {
     implementation "com.github.bumptech.glide:glide:$glide_version"
     kapt "com.github.bumptech.glide:compiler:$glide_version"
 
+    // Firebase
+    implementation platform("com.google.firebase:firebase-bom:32.2.0")
+    implementation("com.google.firebase:firebase-analytics-ktx")
+
     // Other Libs
-    implementation 'com.facebook.shimmer:shimmer:0.5.0'
+    implementation "com.facebook.shimmer:shimmer:0.5.0"
     implementation "androidx.datastore:datastore-preferences:1.0.0"
 
     // Unit tests
@@ -133,6 +138,6 @@ dependencies {
     testImplementation "androidx.room:room-testing:$room_version"
 
     // Instrumentation tests
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    androidTestImplementation "androidx.test.ext:junit:1.1.5"
+    androidTestImplementation "androidx.test.espresso:espresso-core:3.5.1"
 }
