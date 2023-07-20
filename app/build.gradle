@@ -136,7 +136,8 @@ dependencies {
 
     // Firebase
     implementation platform("com.google.firebase:firebase-bom:32.2.0")
-    implementation("com.google.firebase:firebase-analytics-ktx")
+    // implementation "com.google.firebase:firebase-analytics-ktx"
+    implementation "com.google.firebase:firebase-analytics:21.3.0"
 
     // Other Libs
     implementation "com.facebook.shimmer:shimmer:0.5.0"
@@ -155,8 +156,7 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
     androidTestImplementation "androidx.test.espresso:espresso-contrib:$espressoVersion"
 
-    def fragment_version = "1.4.0"
-    debugImplementation "androidx.fragment:fragment-testing:$fragment_version"
+    debugImplementation "androidx.fragment:fragment-testing:1.6.0"
 
     androidTestImplementation "com.google.dagger:hilt-android-testing:$hilt_version"
     kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hilt_version"
