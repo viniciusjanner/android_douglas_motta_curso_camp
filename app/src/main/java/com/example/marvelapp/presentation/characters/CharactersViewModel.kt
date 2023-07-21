@@ -18,9 +18,9 @@ class CharactersViewModel @Inject constructor(
 
     fun charactersPagingData(query: String): Flow<PagingData<Character>> {
         //
-        // O GetCharactersUseCase extend PagingUseCase.
+        // O GetCharactersUseCaseImpl extend GetCharactersUseCase.
         //
-        // Em PagingUseCase temos a funcao -> operator fun invoke...
+        // Em GetCharactersUseCase temos a funcao -> operator fun invoke...
         //
         // Podemos suprimir aqui o invoke de "getCharactersUseCase.invoke" por causa do modificador operator.
         //
@@ -29,5 +29,5 @@ class CharactersViewModel @Inject constructor(
         ).cachedIn(viewModelScope)
     }
 
-    private fun getPageConfig() = PagingConfig(pageSize = 20)
+    private fun getPageConfig(): PagingConfig = PagingConfig(pageSize = 20)
 }
