@@ -41,79 +41,81 @@ class CharactersPagingSourceTest {
     }
 
     @Test
-    fun `should return a success load result when load is called`() = runTest {
-        //
-        // deve retornar um resultado de load com sucesso quando load é chamado
-        //
-        // Arrange
-        whenever(
-            remoteDataSource.fetchCharacters(any()),
-        ).thenReturn(
-            characterPagingFactory.create(),
-        )
+    fun `should return a success load result when load is called`() =
+        runTest {
+            //
+            // deve retornar um resultado de load com sucesso quando load é chamado
+            //
+            // Arrange
+            whenever(
+                remoteDataSource.fetchCharacters(any()),
+            ).thenReturn(
+                characterPagingFactory.create(),
+            )
 
-        // Act
-        //
-        // PagingSource possui Append, Prepend e Refresh
-        // Refresh: quando chamando pela primeira vez (offset = 0 primeira pagina).
-        // Prepend: quando ocorre o scroll de cima pra baixo.
-        // Append: quanod ocorre scroll infinito.
-        //
-        val result = charactersPagingSource.load(
-            PagingSource.LoadParams.Refresh(
-                null,
-                loadSize = 2,
-                false,
-            ),
-        )
+            // Act
+            //
+            // PagingSource possui Append, Prepend e Refresh
+            // Refresh: quando chamando pela primeira vez (offset = 0 primeira pagina).
+            // Prepend: quando ocorre o scroll de cima pra baixo.
+            // Append: quanod ocorre scroll infinito.
+            //
+            val result = charactersPagingSource.load(
+                PagingSource.LoadParams.Refresh(
+                    null,
+                    loadSize = 2,
+                    false,
+                ),
+            )
 
-        // Assert
-        val expected = listOf(
-            characterFactory.create(CharacterFactory.Hero.ThreeDMan),
-            characterFactory.create(CharacterFactory.Hero.ABomb),
-        )
-        assertEquals(
-            PagingSource.LoadResult.Page(
-                data = expected,
-                prevKey = null,
-                nextKey = 20,
-            ),
-            result,
-        )
-    }
+            // Assert
+            val expected = listOf(
+                characterFactory.create(CharacterFactory.Hero.ThreeDMan),
+                characterFactory.create(CharacterFactory.Hero.ABomb),
+            )
+            assertEquals(
+                PagingSource.LoadResult.Page(
+                    data = expected,
+                    prevKey = null,
+                    nextKey = 20,
+                ),
+                result,
+            )
+        }
 
     @Test
-    fun `should return a error load result when load is called`() = runTest {
-        //
-        // deve retornar um resultado de load de erro quando load é chamado
-        //
-        // Arrange
-        val exception = RuntimeException()
-        whenever(
-            remoteDataSource.fetchCharacters(any()),
-        ).thenThrow(
-            exception,
-        )
+    fun `should return a error load result when load is called`() =
+        runTest {
+            //
+            // deve retornar um resultado de load de erro quando load é chamado
+            //
+            // Arrange
+            val exception = RuntimeException()
+            whenever(
+                remoteDataSource.fetchCharacters(any()),
+            ).thenThrow(
+                exception,
+            )
 
-        // Act
-        //
-        // PagingSource possui Append, Prepend e Refresh
-        // Refresh: quando chamando pela primeira vez (offset = 0 primeira pagina).
-        // Prepend: quando ocorre o scroll de cima pra baixo.
-        // Append: quanod ocorre scroll infinito.
-        //
-        val result = charactersPagingSource.load(
-            PagingSource.LoadParams.Refresh(
-                key = null,
-                loadSize = 2,
-                placeholdersEnabled = false,
-            ),
-        )
+            // Act
+            //
+            // PagingSource possui Append, Prepend e Refresh
+            // Refresh: quando chamando pela primeira vez (offset = 0 primeira pagina).
+            // Prepend: quando ocorre o scroll de cima pra baixo.
+            // Append: quanod ocorre scroll infinito.
+            //
+            val result = charactersPagingSource.load(
+                PagingSource.LoadParams.Refresh(
+                    key = null,
+                    loadSize = 2,
+                    placeholdersEnabled = false,
+                ),
+            )
 
-        // Assert
-        assertEquals(
-            PagingSource.LoadResult.Error<Int, Character>(exception),
-            result,
-        )
-    }
+            // Assert
+            assertEquals(
+                PagingSource.LoadResult.Error<Int, Character>(exception),
+                result,
+            )
+        }
 }
