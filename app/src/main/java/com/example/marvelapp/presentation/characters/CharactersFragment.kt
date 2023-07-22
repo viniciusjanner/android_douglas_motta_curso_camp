@@ -104,18 +104,18 @@ class CharactersFragment : Fragment() {
                     when (loadState.refresh) {
                         LoadState.Loading -> {
                             setShimmerVisibility(true)
-                            FLIPPER_CHILD_LOADING
+                            FLIPPER_CHILD_POSITION_LOADING
                         }
                         is LoadState.NotLoading -> {
                             setShimmerVisibility(false)
-                            FLIPPER_CHILD_CHARACTERS
+                            FLIPPER_CHILD_POSITION_CHARACTERS
                         }
                         is LoadState.Error -> {
                             setShimmerVisibility(false)
-                            binding.includeViewCharactersErrorState.buttonRetry.setOnClickListener {
-                                charactersAdapter.refresh()
+                            binding.includeErrorView.buttonRetry.setOnClickListener {
+                                charactersAdapter.retry()
                             }
-                            FLIPPER_CHILD_ERROR
+                            FLIPPER_CHILD_POSITION_ERROR
                         }
                     }
             }
@@ -135,8 +135,8 @@ class CharactersFragment : Fragment() {
     }
 
     companion object {
-        private const val FLIPPER_CHILD_LOADING = 0
-        private const val FLIPPER_CHILD_CHARACTERS = 1
-        private const val FLIPPER_CHILD_ERROR = 2
+        private const val FLIPPER_CHILD_POSITION_LOADING = 0
+        private const val FLIPPER_CHILD_POSITION_CHARACTERS = 1
+        private const val FLIPPER_CHILD_POSITION_ERROR = 2
     }
 }

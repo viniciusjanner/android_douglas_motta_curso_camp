@@ -2,9 +2,10 @@ package com.example.marvelapp.presentation.characters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.core.domain.model.Character
-import com.example.marvelapp.R
 import com.example.marvelapp.databinding.ItemCharactersBinding
 import com.example.marvelapp.framework.imageloader.ImageLoader
 import com.example.marvelapp.presentation.util.OnCharacterItemClick
@@ -15,15 +16,15 @@ class CharactersViewHolder(
     private val onItemClick: OnCharacterItemClick,
 ) : RecyclerView.ViewHolder(itemBinding.root) {
 
-    private val textName = itemBinding.textName
-    private val imageCharacter = itemBinding.imageCharacter
+    private val textName: TextView = itemBinding.textName
+    private val imageCharacter: ImageView = itemBinding.imageCharacter
 
     fun bind(character: Character) {
         textName.text = character.name
 
         imageCharacter.transitionName = character.name
 
-        imageLoader.load(imageCharacter, character.imageUrl, R.drawable.ic_img_loading_error)
+        imageLoader.load(imageCharacter, character.imageUrl)
 
         itemView.setOnClickListener {
             onItemClick.invoke(character, imageCharacter)
@@ -37,8 +38,9 @@ class CharactersViewHolder(
             onItemClick: OnCharacterItemClick,
         ): CharactersViewHolder {
             val inflater = LayoutInflater.from(parent.context)
-            val itemBinding = ItemCharactersBinding
-                .inflate(inflater, parent, false)
+
+            val itemBinding = ItemCharactersBinding.inflate(inflater, parent, false)
+
             return CharactersViewHolder(itemBinding, imageLoader, onItemClick)
         }
     }
