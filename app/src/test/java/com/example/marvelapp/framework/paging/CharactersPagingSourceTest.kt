@@ -3,8 +3,7 @@ package com.example.marvelapp.framework.paging
 import androidx.paging.PagingSource
 import com.example.core.data.repository.CharactersRemoteDataSource
 import com.example.core.domain.model.Character
-import com.example.marvelapp.factory.response.DataWrapperResponseFactory
-import com.example.marvelapp.framework.network.response.DataWrapperResponse
+import com.example.marvelapp.factory.response.CharacterPagingFactory
 import com.example.testing.MainCoroutineRule
 import com.example.testing.model.CharacterFactory
 import com.nhaarman.mockitokotlin2.any
@@ -20,17 +19,17 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import java.lang.RuntimeException
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class CharactersPagingSourceTest {
 
-    @ExperimentalCoroutinesApi
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
     @Mock
-    lateinit var remoteDataSource: CharactersRemoteDataSource<DataWrapperResponse>
+    lateinit var remoteDataSource: CharactersRemoteDataSource
 
-    private val dataWrapperResponseFactory = DataWrapperResponseFactory()
+    private val characterPagingFactory = CharacterPagingFactory()
 
     private val characterFactory = CharacterFactory()
 
@@ -41,82 +40,82 @@ class CharactersPagingSourceTest {
         charactersPagingSource = CharactersPagingSource(remoteDataSource, "")
     }
 
-    @ExperimentalCoroutinesApi
     @Test
-    fun `should return a success load result when load is called`() = runTest {
-        //
-        // deve retornar um resultado de load com sucesso quando load é chamado
-        //
-        // Arrange
-        whenever(
-            remoteDataSource.fetchCharacters(any()),
-        ).thenReturn(
-            dataWrapperResponseFactory.create(),
-        )
+    fun `should return a success load result when load is called`() =
+        runTest {
+            //
+            // deve retornar um resultado de load com sucesso quando load é chamado
+            //
+            // Arrange
+            whenever(
+                remoteDataSource.fetchCharacters(any()),
+            ).thenReturn(
+                characterPagingFactory.create(),
+            )
 
-        // Act
-        //
-        // PagingSource possui Append, Prepend e Refresh
-        // Refresh: quando chamando pela primeira vez (offset = 0 primeira pagina).
-        // Prepend: quando ocorre o scroll de cima pra baixo.
-        // Append: quanod ocorre scroll infinito.
-        //
-        val result = charactersPagingSource.load(
-            PagingSource.LoadParams.Refresh(
-                null,
-                loadSize = 2,
-                false,
-            ),
-        )
+            // Act
+            //
+            // PagingSource possui Append, Prepend e Refresh
+            // Refresh: quando chamando pela primeira vez (offset = 0 primeira pagina).
+            // Prepend: quando ocorre o scroll de cima pra baixo.
+            // Append: quanod ocorre scroll infinito.
+            //
+            val result = charactersPagingSource.load(
+                PagingSource.LoadParams.Refresh(
+                    null,
+                    loadSize = 2,
+                    false,
+                ),
+            )
 
-        // Assert
-        val expected = listOf(
-            characterFactory.create(CharacterFactory.Hero.ThreeDMan),
-            characterFactory.create(CharacterFactory.Hero.ABomb),
-        )
-        assertEquals(
-            PagingSource.LoadResult.Page(
-                data = expected,
-                prevKey = null,
-                nextKey = 20,
-            ),
-            result,
-        )
-    }
+            // Assert
+            val expected = listOf(
+                characterFactory.create(CharacterFactory.Hero.ThreeDMan),
+                characterFactory.create(CharacterFactory.Hero.ABomb),
+            )
+            assertEquals(
+                PagingSource.LoadResult.Page(
+                    data = expected,
+                    prevKey = null,
+                    nextKey = 20,
+                ),
+                result,
+            )
+        }
 
-    @ExperimentalCoroutinesApi
     @Test
-    fun `should return a error load result when load is called`() = runTest {
-        //
-        // deve retornar um resultado de load de erro quando load é chamado
-        //
-        // Arrange
-        val exception = RuntimeException()
-        whenever(
-            remoteDataSource.fetchCharacters(any()),
-        ).thenThrow(
-            exception,
-        )
+    fun `should return a error load result when load is called`() =
+        runTest {
+            //
+            // deve retornar um resultado de load de erro quando load é chamado
+            //
+            // Arrange
+            val exception = RuntimeException()
+            whenever(
+                remoteDataSource.fetchCharacters(any()),
+            ).thenThrow(
+                exception,
+            )
 
-        // Act
-        //
-        // PagingSource possui Append, Prepend e Refresh
-        // Refresh: quando chamando pela primeira vez (offset = 0 primeira pagina).
-        // Prepend: quando ocorre o scroll de cima pra baixo.
-        // Append: quanod ocorre scroll infinito.
-        //
-        val result = charactersPagingSource.load(
-            PagingSource.LoadParams.Refresh(
-                key = null,
-                loadSize = 2,
-                placeholdersEnabled = false,
-            ),
-        )
+            // Act
+            //
+            // PagingSource possui Append, Prepend e Refresh
+            // Refresh: quando chamando pela primeira vez (offset = 0 primeira pagina).
+            // Prepend: quando ocorre o scroll de cima pra baixo.
+            // Append: quanod ocorre scroll infinito.
+            //
+            val result = charactersPagingSource.load(
+                PagingSource.LoadParams.Refresh(
+                    key = null,
+                    loadSize = 2,
+                    placeholdersEnabled = false,
+                ),
+            )
 
-        // Assert
-        assertEquals(
-            PagingSource.LoadResult.Error<Int, Character>(exception),
-            result,
-        )
-    }
+            // Assert
+            assertEquals(
+                PagingSource.LoadResult.Error<Int, Character>(exception),
+                result,
+            )
+        }
 }
