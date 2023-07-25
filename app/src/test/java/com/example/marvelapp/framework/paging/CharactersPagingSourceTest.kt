@@ -42,10 +42,10 @@ class CharactersPagingSourceTest {
 
     @Test
     fun `should return a success load result when load is called`() =
+        //
+        // deve retornar um resultado de load com sucesso quando load é chamado
+        //
         runTest {
-            //
-            // deve retornar um resultado de load com sucesso quando load é chamado
-            //
             // Arrange
             whenever(
                 remoteDataSource.fetchCharacters(any()),
@@ -85,10 +85,10 @@ class CharactersPagingSourceTest {
 
     @Test
     fun `should return a error load result when load is called`() =
+        //
+        // deve retornar um resultado de load de erro quando load é chamado
+        //
         runTest {
-            //
-            // deve retornar um resultado de load de erro quando load é chamado
-            //
             // Arrange
             val exception = RuntimeException()
             whenever(

@@ -46,6 +46,9 @@ class CharactersViewModelTest {
 
     @Test
     fun `should validate the paging data object values when calling charactersPagingData`() =
+        //
+        // deve validar os valores do objeto de dados de paginação ao chamar os charactersPagingData
+        //
         runTest {
             whenever(
                 getCharactersUseCase.invoke(any()),
@@ -62,6 +65,9 @@ class CharactersViewModelTest {
 
     @Test(expected = RuntimeException::class)
     fun `should throw an exception when the calling to the use case returns an exception`() =
+        //
+        // deve lançar uma exceção quando a chamada para o caso de uso retornar uma exceção
+        //
         runTest {
             whenever(
                 getCharactersUseCase.invoke(any()),

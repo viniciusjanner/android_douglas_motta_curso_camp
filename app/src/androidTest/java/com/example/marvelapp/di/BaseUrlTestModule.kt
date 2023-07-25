@@ -6,6 +6,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 
+@Suppress("unused", "FunctionOnlyReturningConstant")
 @Module
 @InstallIn(SingletonComponent::class)
 object BaseUrlTestModule {

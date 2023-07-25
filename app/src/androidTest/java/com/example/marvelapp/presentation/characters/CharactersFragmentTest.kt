@@ -42,6 +42,10 @@ class CharactersFragmentTest {
 
     @Test
     fun shouldShowCharacters_whenViewIsCreated() {
+        //
+        // deve mostrar caracteres quando a exibição é criada
+        //
+
         // Arrange
         server.enqueue(MockResponse().setBody("characters_p1.json".asJsonString()))
 
@@ -57,6 +61,10 @@ class CharactersFragmentTest {
 
     @Test
     fun shouldLoadMoreCharacters_whenNewPageIsRequested() {
+        //
+        // deve carregar mais caracteres quando uma nova página for solicitada
+        //
+
         // Arrange
         with(server) {
             enqueue(MockResponse().setBody("characters_p1.json".asJsonString()))
@@ -80,6 +88,10 @@ class CharactersFragmentTest {
 
     @Test
     fun shouldShowErrorView_whenReceivesAnErrorFromApi() {
+        //
+        // deve mostrar visualização de erro quando recebe um erro da API
+        //
+
         // Arrange
         server.enqueue(MockResponse().setResponseCode(404))
 
