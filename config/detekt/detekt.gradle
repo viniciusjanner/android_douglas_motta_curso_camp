@@ -12,7 +12,10 @@ detekt {
     // Para projetos que possuem mais de um modulo.
     def inputDirFiles = []
     rootProject.subprojects.each { module ->
-        inputDirFiles << "$module.projectDir/src/main/java"
+        // Ignorar modulo testing
+        if (module.name != "testing") {
+            inputDirFiles << "$module.projectDir/src/main/java"
+        }
     }
     source = files(inputDirFiles)
     config = files("$rootDir/config/detekt/detekt.yml")
