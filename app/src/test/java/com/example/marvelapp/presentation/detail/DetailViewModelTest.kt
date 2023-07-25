@@ -55,6 +55,10 @@ class DetailViewModelTest {
 
     @Test
     fun `should notify uiState with Success from UiState when get character categories returns success`() =
+        //
+        // deve notificar uiState com sucesso de UiState quando obter categorias de character
+        // retorna sucesso
+        //
         runTest {
             // Arrange
             whenever(getCharacterCategoriesUseCase.invoke(any()))
@@ -88,6 +92,10 @@ class DetailViewModelTest {
 
     @Test
     fun `should notify uiState with Success from UiState when get character categories returns only comics`() =
+        //
+        // deve notificar uiState com sucesso de UiState quando obter categorias de character
+        // retorna apenas comics
+        //
         runTest {
             // Arrange
             whenever(getCharacterCategoriesUseCase.invoke(any()))
@@ -117,6 +125,10 @@ class DetailViewModelTest {
 
     @Test
     fun `should notify uiState with Success from UiState when get character categories returns only events`() =
+        //
+        // deve notificar uiState com sucesso de UiState quando obter categorias de character
+        // retorna apenas events
+        //
         runTest {
             // Arrange
             whenever(getCharacterCategoriesUseCase.invoke(any()))
@@ -146,6 +158,10 @@ class DetailViewModelTest {
 
     @Test
     fun `should notify uiState with Empty from UiState when get character categories returns an empty result list`() =
+        //
+        // deve notificar uiState com Empty from UiState quando obter categorias de character
+        // retorna uma lista de resultados vazia
+        //
         runTest {
             // Arrange
             whenever(getCharacterCategoriesUseCase.invoke(any()))
@@ -166,6 +182,10 @@ class DetailViewModelTest {
 
     @Test
     fun `should notify uiState with Error from UiState when get character categories returns an exception`() =
+        //
+        // deve notificar uiState com erro de UiState quando obter categorias de character
+        // retorna uma exceção
+        //
         runTest {
             // Arrange
             whenever(getCharacterCategoriesUseCase.invoke(any()))
