@@ -1,6 +1,8 @@
 package com.example.core.usecase
 
 import com.example.core.data.repository.CharactersRepository
+import com.example.core.domain.model.Comic
+import com.example.core.domain.model.Event
 import com.example.core.usecase.GetCharacterCategoriesUseCase.GetCategoriesParams
 import com.example.core.usecase.base.ResultStatus
 import com.example.testing.MainCoroutineRule
@@ -9,6 +11,7 @@ import com.example.testing.model.ComicFactory
 import com.example.testing.model.EventFactory
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -48,7 +51,7 @@ class GetCharacterCategoriesUseCaseImplTest {
     @Test
     fun `should return Success from ResultStatus when get both requests return success`() =
         //
-        // deve retornar Success de ResultStatus quando ambos os pedidos retornam com sucesso
+        // deve retornar Success de ResultStatus quando ambos requests retornam com sucesso
         //
         runTest {
             // Arrange
@@ -56,10 +59,13 @@ class GetCharacterCategoriesUseCaseImplTest {
             whenever(repository.getEvents(character.id)).thenReturn(events)
 
             // Act
-            val result = getCharacterCategoriesUseCase.invoke(GetCategoriesParams(character.id))
+            val resultFlow: Flow<ResultStatus<Pair<List<Comic>, List<Event>>>> =
+                getCharacterCategoriesUseCase.invoke(
+                    GetCategoriesParams(character.id),
+                )
 
             // Assert
-            val resultList = result.toList()
+            val resultList = resultFlow.toList()
             assertEquals(ResultStatus.Loading, resultList[0])
             assertTrue(resultList[1] is ResultStatus.Success)
         }
@@ -67,17 +73,20 @@ class GetCharacterCategoriesUseCaseImplTest {
     @Test
     fun `should return Error from ResultStatus when get events request returns error`() =
         //
-        // deve retornar um erro de ResultStatus quando a solicitação de events retornar erro
+        // deve retornar um erro de ResultStatus quando a request de events retornar erro
         //
         runTest {
             // Arrange
             whenever(repository.getComics(character.id)).thenAnswer { throw Throwable() }
 
             // Act
-            val result = getCharacterCategoriesUseCase.invoke(GetCategoriesParams(character.id))
+            val resultFlow: Flow<ResultStatus<Pair<List<Comic>, List<Event>>>> =
+                getCharacterCategoriesUseCase.invoke(
+                    GetCategoriesParams(character.id),
+                )
 
             // Assert
-            val resultList = result.toList()
+            val resultList = resultFlow.toList()
             assertEquals(ResultStatus.Loading, resultList[0])
             assertTrue(resultList[1] is ResultStatus.Error)
         }
@@ -85,7 +94,7 @@ class GetCharacterCategoriesUseCaseImplTest {
     @Test
     fun `should return Error from ResultStatus when get comics request returns error`() =
         //
-        // deve retornar o erro de ResultStatus quando a solicitação de comics retornar o erro
+        // deve retornar o erro de ResultStatus quando a request de comics retornar o erro
         //
         runTest {
             // Arrange
@@ -93,10 +102,13 @@ class GetCharacterCategoriesUseCaseImplTest {
             whenever(repository.getEvents(character.id)).thenAnswer { throw Throwable() }
 
             // Act
-            val result = getCharacterCategoriesUseCase.invoke(GetCategoriesParams(character.id))
+            val resultFlow: Flow<ResultStatus<Pair<List<Comic>, List<Event>>>> =
+                getCharacterCategoriesUseCase.invoke(
+                    GetCategoriesParams(character.id),
+                )
 
             // Assert
-            val resultList = result.toList()
+            val resultList = resultFlow.toList()
             assertEquals(ResultStatus.Loading, resultList[0])
             assertTrue(resultList[1] is ResultStatus.Error)
         }
