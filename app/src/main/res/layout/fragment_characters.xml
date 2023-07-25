@@ -15,12 +15,13 @@
         android:id="@+id/recyclerCharacters"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:importantForAccessibility="no"
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/item_characters" />
 
     <include
-        android:id="@+id/includeViewCharactersErrorState"
-        layout="@layout/include_view_characters_error_state" />
+        android:id="@+id/includeErrorView"
+        layout="@layout/include_error_view" />
 
 </ViewFlipper>
