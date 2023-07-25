@@ -15,8 +15,8 @@ dependencies {
     implementation "androidx.paging:paging-common:$paging_version"
 
     // Unit tests
-    api 'junit:junit:4.13.2'
+    api "junit:junit:4.13.2"
     api "androidx.arch.core:core-testing:2.1.0" // A versão 2.2.0 gera erro de compilação.
-    api 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1'
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version"
     api "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
 }

@@ -5,6 +5,7 @@ plugins {
     id 'kotlin-parcelize'
     id 'androidx.navigation.safeargs'
     id 'dagger.hilt.android.plugin'
+    id 'com.google.gms.google-services'
 }
 
 apply from: '../config/detekt/detekt.gradle'
@@ -32,11 +33,20 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
         buildConfigField "String", "PUBLIC_KEY", apikeyProperties['PUBLIC_KEY']
         buildConfigField "String", "PRIVATE_KEY", apikeyProperties['PRIVATE_KEY']
         buildConfigField "String", "BASE_URL", '"https://gateway.marvel.com/v1/public/"'
+
+        testInstrumentationRunner "com.example.marvelapp.CustomTestRunner"
+
+        // The following argument makes the Android Test Orchestrator run its
+        // "pm clear" command after each test invocation. This command ensures
+        // that the app's state is completely cleared between tests.
+        testInstrumentationRunnerArguments clearPackageData: 'true'
+    }
+
+    testOptions {
+        execution 'ANDROIDX_TEST_ORCHESTRATOR'
     }
 
     buildTypes {
@@ -84,13 +94,13 @@ dependencies {
     implementation project(':core')
 
     // AndroidX
-    implementation 'androidx.core:core-ktx:1.10.1'
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation "androidx.core:core-ktx:1.10.1"
+    implementation "androidx.appcompat:appcompat:1.6.1"
+    implementation "androidx.constraintlayout:constraintlayout:2.1.4"
 
     // Material design
-    implementation 'com.google.android.material:material:1.9.0'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation "com.google.android.material:material:1.9.0"
+    implementation "androidx.legacy:legacy-support-v4:1.0.0"
 
     // Navigation
     def nav_version = '2.6.0'
@@ -124,15 +134,35 @@ dependencies {
     implementation "com.github.bumptech.glide:glide:$glide_version"
     kapt "com.github.bumptech.glide:compiler:$glide_version"
 
+    // Firebase
+    implementation platform("com.google.firebase:firebase-bom:32.2.0")
+    // implementation "com.google.firebase:firebase-analytics-ktx"
+    implementation "com.google.firebase:firebase-analytics:21.3.0"
+
     // Other Libs
-    implementation 'com.facebook.shimmer:shimmer:0.5.0'
+    implementation "com.facebook.shimmer:shimmer:0.5.0"
     implementation "androidx.datastore:datastore-preferences:1.0.0"
 
     // Unit tests
     testImplementation project(':testing')
     testImplementation "androidx.room:room-testing:$room_version"
 
+    //......................................................................................
     // Instrumentation tests
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    androidTestImplementation "androidx.test.ext:junit:1.1.5"
+
+    def espressoVersion = "3.5.1"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:$espressoVersion"
+
+    debugImplementation "androidx.fragment:fragment-testing:1.6.0"
+
+    androidTestImplementation "com.google.dagger:hilt-android-testing:$hilt_version"
+    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hilt_version"
+
+    androidTestImplementation("com.squareup.okhttp3:mockwebserver:4.11.0")
+
+    androidTestImplementation "androidx.test:runner:1.5.2"
+    androidTestUtil "androidx.test:orchestrator:1.4.2"
 }
