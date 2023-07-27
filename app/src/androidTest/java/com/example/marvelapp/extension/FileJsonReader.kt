@@ -5,6 +5,7 @@ import dagger.hilt.android.testing.HiltTestApplication
 import java.io.IOException
 import java.io.InputStreamReader
 
+@Suppress("RethrowCaughtException")
 fun String.asJsonString(): String {
     try {
         val inputStream = (
