@@ -15,8 +15,6 @@ def apikeyProperties = new Properties()
 apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
 
 android {
-    compileSdkVersion 33
-
     signingConfigs {
         release {
             storeFile file('\\..\\store\\marvel_app_key_store.jks')
@@ -30,6 +28,7 @@ android {
         applicationId "com.example.marvelapp"
         minSdkVersion 21
         targetSdkVersion 33
+        compileSdk 33
         versionCode 1
         versionName "1.0"
 
