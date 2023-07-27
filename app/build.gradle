@@ -38,9 +38,9 @@ android {
 
         testInstrumentationRunner "com.example.marvelapp.CustomTestRunner"
 
-        // The following argument makes the Android Test Orchestrator run its
-        // "pm clear" command after each test invocation. This command ensures
-        // that the app's state is completely cleared between tests.
+        // O argumento a seguir faz com que o Android Test Orchestrator execute seu
+        // comando "pm clear" após cada chamada de teste. Este comando garante
+        // que o estado do aplicativo é completamente limpo entre os testes.
         testInstrumentationRunnerArguments clearPackageData: 'true'
     }
 
