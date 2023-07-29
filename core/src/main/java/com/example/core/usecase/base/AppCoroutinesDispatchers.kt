@@ -4,7 +4,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
-@Suppress("unused")
 interface CoroutinesDispatchers {
     fun main(): CoroutineDispatcher = Dispatchers.Main
     fun default(): CoroutineDispatcher = Dispatchers.Default
