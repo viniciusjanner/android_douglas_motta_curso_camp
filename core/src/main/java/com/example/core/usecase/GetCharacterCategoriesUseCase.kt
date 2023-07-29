@@ -7,6 +7,7 @@ import com.example.core.usecase.GetCharacterCategoriesUseCase.GetCategoriesParam
 import com.example.core.usecase.base.CoroutinesDispatchers
 import com.example.core.usecase.base.ResultStatus
 import com.example.core.usecase.base.UseCase
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
@@ -28,11 +29,11 @@ class GetCharacterCategoriesUseCaseImpl @Inject constructor(
     override suspend fun doWork(params: GetCategoriesParams): ResultStatus<Pair<List<Comic>, List<Event>>> {
         return withContext(dispatchers.io()) {
             val id = params.characterId
-            val comicsDeferred = async { repository.getComics(id) }
-            val eventsDeferred = async { repository.getEvents(id) }
+            val comicsDeferred: Deferred<List<Comic>> = async { repository.getComics(id) }
+            val eventsDeferred: Deferred<List<Event>> = async { repository.getEvents(id) }
 
-            val comics = comicsDeferred.await()
-            val events = eventsDeferred.await()
+            val comics: List<Comic> = comicsDeferred.await()
+            val events: List<Event> = eventsDeferred.await()
 
             ResultStatus.Success(comics to events)
         }
