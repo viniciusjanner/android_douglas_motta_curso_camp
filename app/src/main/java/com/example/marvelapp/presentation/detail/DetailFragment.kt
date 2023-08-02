@@ -86,8 +86,10 @@ class DetailFragment : Fragment() {
 
     // Define a animação da transição como "move"
     private fun setSharedElementTransitionOnEnter() {
-        TransitionInflater.from(requireContext())
-            .inflateTransition(android.R.transition.move).apply {
+        TransitionInflater
+            .from(requireContext())
+            .inflateTransition(android.R.transition.move)
+            .apply {
                 sharedElementEnterTransition = this
             }
     }
