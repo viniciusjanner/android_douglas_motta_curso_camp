@@ -1,5 +1,7 @@
 package com.example.marvelapp.framework.di
 
+import com.example.core.usecase.AddFavoriteUseCase
+import com.example.core.usecase.AddFavoriteUseCaseImpl
 import com.example.core.usecase.GetCharacterCategoriesUseCase
 import com.example.core.usecase.GetCharacterCategoriesUseCaseImpl
 import com.example.core.usecase.GetCharactersUseCase
@@ -19,4 +21,7 @@ interface UseCaseModule {
 
     @Binds
     fun bindGetCharacterCategoriesUseCase(useCase: GetCharacterCategoriesUseCaseImpl): GetCharacterCategoriesUseCase
+
+    @Binds
+    fun bindAddFavoriteUseCase(useCase: AddFavoriteUseCaseImpl): AddFavoriteUseCase
 }
