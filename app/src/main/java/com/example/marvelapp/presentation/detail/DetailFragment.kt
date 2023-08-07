@@ -46,6 +46,17 @@ class DetailFragment : Fragment() {
 
         setSharedElementTransitionOnEnter()
 
+        observeUiState(detailViewArg)
+        observeFavoriteUiState()
+
+        viewModel.getCharacterCategories(detailViewArg.characterId)
+
+        binding.imageFavoriteIcon.setOnClickListener {
+            viewModel.updateFavorite(detailViewArg)
+        }
+    }
+
+    private fun observeUiState(detailViewArg: DetailViewArg) {
         viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
             // ViewFlipper
             binding.flipperDetail.displayedChild =
@@ -75,8 +86,24 @@ class DetailFragment : Fragment() {
                     }
                 }
         }
+    }
 
-        viewModel.getCharacterCategories(detailViewArg.characterId)
+    private fun observeFavoriteUiState() {
+        viewModel.favoriteUiState.observe(viewLifecycleOwner) { favoriteUiState ->
+            // ViewFlipper
+            binding.flipperFavorite.displayedChild =
+                // States
+                when (favoriteUiState) {
+                    DetailViewModel.FavoriteUiState.Loading -> {
+                        FLIPPER_FAVORITE_CHILD_POSITION_LOADING
+                    }
+
+                    is DetailViewModel.FavoriteUiState.FavoriteIcon -> {
+                        binding.imageFavoriteIcon.setImageResource(favoriteUiState.icon)
+                        FLIPPER_FAVORITE_CHILD_POSITION_SUCCESS
+                    }
+                }
+        }
     }
 
     override fun onDestroyView() {
@@ -99,5 +126,8 @@ class DetailFragment : Fragment() {
         private const val FLIPPER_CHILD_POSITION_DETAIL = 1
         private const val FLIPPER_CHILD_POSITION_ERROR = 2
         private const val FLIPPER_CHILD_POSITION_EMPTY = 3
+
+        private const val FLIPPER_FAVORITE_CHILD_POSITION_SUCCESS = 0
+        private const val FLIPPER_FAVORITE_CHILD_POSITION_LOADING = 1
     }
 }

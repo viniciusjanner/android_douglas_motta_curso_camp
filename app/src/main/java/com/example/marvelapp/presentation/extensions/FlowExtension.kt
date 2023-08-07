@@ -5,6 +5,9 @@ import kotlinx.coroutines.flow.Flow
 
 @Suppress("unused")
 suspend fun <T> Flow<ResultStatus<T>>.watchStatus(
+    //
+    // Usamos {} para suprimir o bloco de codigo ao chamarmos .watchStatus
+    //
     loading: suspend () -> Unit = {},
     success: suspend (data: T) -> Unit,
     error: suspend (throwable: Throwable) -> Unit,
