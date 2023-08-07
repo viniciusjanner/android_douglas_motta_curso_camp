@@ -23,8 +23,8 @@ interface GetCharacterCategoriesUseCase {
 class GetCharacterCategoriesUseCaseImpl @Inject constructor(
     private val repository: CharactersRepository,
     private val dispatchers: CoroutinesDispatchers,
-) : GetCharacterCategoriesUseCase,
-    UseCase<GetCategoriesParams, Pair<List<Comic>, List<Event>>>() {
+) : UseCase<GetCategoriesParams, Pair<List<Comic>, List<Event>>>(),
+    GetCharacterCategoriesUseCase {
 
     override suspend fun doWork(params: GetCategoriesParams): ResultStatus<Pair<List<Comic>, List<Event>>> {
         return withContext(dispatchers.io()) {
