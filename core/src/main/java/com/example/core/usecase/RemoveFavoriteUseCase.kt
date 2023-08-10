@@ -9,27 +9,23 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-interface AddFavoriteUseCase {
+interface RemoveFavoriteUseCase {
 
     operator fun invoke(params: Params): Flow<ResultStatus<Unit>>
 
     data class Params(val characterId: Int, val name: String, val imageUrl: String)
 }
 
-class AddFavoriteUseCaseImpl @Inject constructor(
+class RemoveFavoriteUseCaseImpl @Inject constructor(
     private val favoritesRepository: FavoritesRepository,
     private val dispatchers: CoroutinesDispatchers,
-) : UseCase<AddFavoriteUseCase.Params, Unit>(),
-    AddFavoriteUseCase {
+) : UseCase<RemoveFavoriteUseCase.Params, Unit>(),
+    RemoveFavoriteUseCase {
 
-    override suspend fun doWork(params: AddFavoriteUseCase.Params): ResultStatus<Unit> {
+    override suspend fun doWork(params: RemoveFavoriteUseCase.Params): ResultStatus<Unit> {
         return withContext(dispatchers.io()) {
-            favoritesRepository.saveFavorite(
-                Character(
-                    params.characterId,
-                    params.name,
-                    params.imageUrl,
-                ),
+            favoritesRepository.deleteFavorite(
+                Character(params.characterId, params.name, params.imageUrl),
             )
             ResultStatus.Success(Unit)
         }

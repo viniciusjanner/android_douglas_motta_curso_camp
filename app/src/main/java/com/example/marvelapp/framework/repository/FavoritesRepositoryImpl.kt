@@ -10,6 +10,11 @@ class FavoritesRepositoryImpl @Inject constructor(
     private val favoritesLocalDataSource: FavoritesLocalDataSource,
 ) : FavoritesRepository {
 
+    //
+    // Flow
+    // A palavra suspend é utilizada para operações executadas uma vez em uma thread em background.
+    // Por isso não utilizamos suspend nas demais funções deste fluxo que retornam Flow.
+    //
     override fun getAll(): Flow<List<Character>> {
         return favoritesLocalDataSource.getAll()
     }

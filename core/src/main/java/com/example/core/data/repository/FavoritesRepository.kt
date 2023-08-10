@@ -5,6 +5,11 @@ import kotlinx.coroutines.flow.Flow
 
 interface FavoritesRepository {
 
+    //
+    // Flow
+    // A palavra suspend é utilizada para operações executadas uma vez em uma thread em background.
+    // Por isso não utilizamos suspend nas demais funções deste fluxo que retornam Flow.
+    //
     fun getAll(): Flow<List<Character>>
 
     suspend fun isFavorite(characterId: Int): Boolean
