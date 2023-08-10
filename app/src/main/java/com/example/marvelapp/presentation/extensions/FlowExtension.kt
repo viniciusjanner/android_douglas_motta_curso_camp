@@ -3,7 +3,6 @@ package com.example.marvelapp.presentation.extensions
 import com.example.core.usecase.base.ResultStatus
 import kotlinx.coroutines.flow.Flow
 
-@Suppress("unused")
 suspend fun <T> Flow<ResultStatus<T>>.watchStatus(
     //
     // Usamos {} para suprimir o bloco de codigo ao chamarmos .watchStatus
