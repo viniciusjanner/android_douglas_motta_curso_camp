@@ -7,6 +7,9 @@ import kotlinx.coroutines.flow.flow
 
 abstract class UseCase<in P, R> {
 
+    //
+    // operator : nos permite suprimir o .invoke na chamada do método.
+    //
     operator fun invoke(params: P): Flow<ResultStatus<R>> =
         flow {
             emit(ResultStatus.Loading)
@@ -20,6 +23,9 @@ abstract class UseCase<in P, R> {
 
 abstract class PagingUseCase<in P, R : Any> {
 
+    //
+    // operator : nos permite suprimir o .invoke na chamada do método.
+    //
     operator fun invoke(params: P): Flow<PagingData<R>> = createFlowObservable(params)
 
     protected abstract fun createFlowObservable(params: P): Flow<PagingData<R>>

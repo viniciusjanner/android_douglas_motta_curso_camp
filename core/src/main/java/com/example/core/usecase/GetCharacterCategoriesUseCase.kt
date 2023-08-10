@@ -15,6 +15,9 @@ import javax.inject.Inject
 
 interface GetCharacterCategoriesUseCase {
 
+    //
+    // operator : nos permite suprimir o .invoke na chamada do método.
+    //
     operator fun invoke(params: GetCategoriesParams): Flow<ResultStatus<Pair<List<Comic>, List<Event>>>>
 
     data class GetCategoriesParams(val characterId: Int)
