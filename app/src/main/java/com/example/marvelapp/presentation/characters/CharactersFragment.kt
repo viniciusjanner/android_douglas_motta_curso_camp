@@ -7,9 +7,7 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
@@ -32,38 +30,8 @@ class CharactersFragment : Fragment() {
     @Inject
     lateinit var imageLoader: ImageLoader
 
-    private lateinit var charactersAdapter: CharactersAdapter
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
-        FragmentCharactersBinding
-            .inflate(inflater, container, false)
-            .apply {
-                _binding = this
-            }
-            .root
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        initCharactersAdapter()
-        observeInitialLoadState()
-
-        lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.charactersPagingData("").collect { pagingData ->
-                    charactersAdapter.submitData(pagingData)
-                }
-            }
-        }
-    }
-
-    override fun onDestroyView() {
-        _binding = null
-        super.onDestroyView()
-    }
-
-    private fun initCharactersAdapter() {
-        charactersAdapter = CharactersAdapter(imageLoader) { character, view ->
+    private val charactersAdapter: CharactersAdapter by lazy {
+        CharactersAdapter(imageLoader) { character, view ->
             val extras = FragmentNavigatorExtras(
                 view to character.name,
             )
@@ -80,17 +48,57 @@ class CharactersFragment : Fragment() {
 
             findNavController().navigate(directions, extras)
         }
+    }
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
+        FragmentCharactersBinding
+            .inflate(inflater, container, false)
+            .apply {
+                _binding = this
+            }
+            .root
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        initCharactersAdapter()
+        observeInitialLoadState()
+
+        viewModel.state.observe(viewLifecycleOwner) { uiState ->
+            when (uiState) {
+                is CharactersViewModel.UiState.SearchResult -> {
+                    //
+                    // viewLifecycleOwner.lifecycle : vincula o ciclo de vida do Fragment ao PagingData.
+                    //
+                    charactersAdapter.submitData(viewLifecycleOwner.lifecycle, uiState.data)
+                }
+            }
+        }
+
+        viewModel.searchCharacters()
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
+    }
+
+    private fun initCharactersAdapter() {
+        postponeEnterTransition()
         with(binding.recyclerCharacters) {
-            scrollToPosition(0)
             setHasFixedSize(true)
             adapter = charactersAdapter.withLoadStateFooter(
                 footer = CharactersLoadMoreStateAdapter(
+                    //
                     // Duas maneiras de fazer a chamada
                     // { charactersAdapter.retry() }
                     charactersAdapter::retry,
                 ),
             )
+            viewTreeObserver.addOnPreDrawListener {
+                startPostponedEnterTransition()
+                true
+            }
         }
     }
 

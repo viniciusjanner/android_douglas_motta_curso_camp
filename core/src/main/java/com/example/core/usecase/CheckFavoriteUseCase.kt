@@ -10,6 +10,9 @@ import javax.inject.Inject
 
 interface CheckFavoriteUseCase {
 
+    //
+    // operator : nos permite suprimir o .invoke na chamada do método.
+    //
     operator fun invoke(params: Params): Flow<ResultStatus<Boolean>>
 
     data class Params(val characterId: Int)

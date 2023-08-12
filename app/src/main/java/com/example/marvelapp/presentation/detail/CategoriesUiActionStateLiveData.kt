@@ -16,15 +16,14 @@ class CategoriesUiActionStateLiveData(
 
     private val action = MutableLiveData<Action>()
 
-    val state: LiveData<UiState> = action.switchMap {
-        liveData(coroutineContext) {
-            when (it) {
-                is Action.Load -> {
-                    getCharacterCategoriesUseCase
-                        .invoke(
+    val state: LiveData<UiState> = action
+        .switchMap {
+            liveData(coroutineContext) {
+                when (it) {
+                    is Action.Load -> {
+                        getCharacterCategoriesUseCase(
                             GetCharacterCategoriesUseCase.GetCategoriesParams(it.characterId),
-                        )
-                        .watchStatus(
+                        ).watchStatus(
                             loading = {
                                 emit(UiState.Loading)
                             },
@@ -63,10 +62,10 @@ class CategoriesUiActionStateLiveData(
                                 emit(UiState.Error)
                             },
                         )
+                    }
                 }
             }
         }
-    }
 
     fun actionLoad(characterId: Int) {
         action.value = Action.Load(characterId)

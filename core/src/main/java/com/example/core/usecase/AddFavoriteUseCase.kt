@@ -11,6 +11,9 @@ import javax.inject.Inject
 
 interface AddFavoriteUseCase {
 
+    //
+    // operator : nos permite suprimir o .invoke na chamada do método.
+    //
     operator fun invoke(params: Params): Flow<ResultStatus<Unit>>
 
     data class Params(val characterId: Int, val name: String, val imageUrl: String)

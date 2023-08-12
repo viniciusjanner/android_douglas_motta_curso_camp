@@ -12,6 +12,9 @@ import javax.inject.Inject
 
 interface GetCharactersUseCase {
 
+    //
+    // operator : nos permite suprimir o .invoke na chamada do método.
+    //
     operator fun invoke(params: GetCharactersParams): Flow<PagingData<Character>>
 
     data class GetCharactersParams(val query: String, val pagingConfig: PagingConfig)
