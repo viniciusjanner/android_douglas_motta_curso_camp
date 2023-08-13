@@ -30,3 +30,13 @@ abstract class PagingUseCase<in P, R : Any> {
 
     protected abstract fun createFlowObservable(params: P): Flow<PagingData<R>>
 }
+
+abstract class FlowUseCase<in P, R : Any> {
+
+    //
+    // operator : nos permite suprimir o .invoke na chamada do método.
+    //
+    suspend operator fun invoke(params: P): Flow<R> = createFlowObservable(params)
+
+    protected abstract suspend fun createFlowObservable(params: P): Flow<R>
+}
