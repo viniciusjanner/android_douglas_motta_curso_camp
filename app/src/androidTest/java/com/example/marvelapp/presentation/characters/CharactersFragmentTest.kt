@@ -44,7 +44,7 @@ class CharactersFragmentTest {
     @Test
     fun shouldShowCharacters_whenViewIsCreated() {
         //
-        // deve mostrar caracteres quando a exibição é criada
+        // deve mostrar Characters quando a exibição é criada
         //
 
         // Arrange
@@ -63,7 +63,7 @@ class CharactersFragmentTest {
     @Test
     fun shouldLoadMoreCharacters_whenNewPageIsRequested() {
         //
-        // deve carregar mais caracteres quando uma nova página for solicitada
+        // deve carregar mais Characters quando uma nova página for solicitada
         //
 
         // Arrange
