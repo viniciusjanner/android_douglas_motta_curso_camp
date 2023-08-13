@@ -63,7 +63,7 @@ class DetailFragment : Fragment() {
                         // State
                         when (uiState) {
                             CategoriesUiActionStateLiveData.UiState.Loading -> {
-                                FLIPPER_CHILD_POSITION_LOADING
+                                FLIPPER_DETAIL_CHILD_LOADING
                             }
 
                             is CategoriesUiActionStateLiveData.UiState.Success -> {
@@ -71,18 +71,18 @@ class DetailFragment : Fragment() {
                                     setHasFixedSize(true)
                                     adapter = DetailParentAdapter(uiState.detailParentList, imageLoader)
                                 }
-                                FLIPPER_CHILD_POSITION_DETAIL
+                                FLIPPER_DETAIL_CHILD_DETAIL
                             }
 
                             CategoriesUiActionStateLiveData.UiState.Error -> {
                                 binding.includeErrorView.buttonRetry.setOnClickListener {
                                     viewModel.categories.actionLoad(detailViewArg.characterId)
                                 }
-                                FLIPPER_CHILD_POSITION_ERROR
+                                FLIPPER_DETAIL_CHILD_ERROR
                             }
 
                             CategoriesUiActionStateLiveData.UiState.Empty -> {
-                                FLIPPER_CHILD_POSITION_EMPTY
+                                FLIPPER_DETAIL_CHILD_EMPTY
                             }
                         }
                 }
@@ -104,17 +104,17 @@ class DetailFragment : Fragment() {
                         // State
                         when (uiState) {
                             FavoriteUiActionStateLiveData.UiState.Loading -> {
-                                FLIPPER_FAVORITE_CHILD_POSITION_LOADING
+                                FLIPPER_FAVORITE_CHILD_LOADING
                             }
 
                             is FavoriteUiActionStateLiveData.UiState.Icon -> {
                                 binding.imageFavoriteIcon.setImageResource(uiState.icon)
-                                FLIPPER_FAVORITE_CHILD_POSITION_IMAGE
+                                FLIPPER_FAVORITE_CHILD_IMAGE
                             }
 
                             is FavoriteUiActionStateLiveData.UiState.Error -> {
                                 showShortToast(uiState.messageResId)
-                                FLIPPER_FAVORITE_CHILD_POSITION_IMAGE
+                                FLIPPER_FAVORITE_CHILD_IMAGE
                             }
                         }
                 }
@@ -137,12 +137,12 @@ class DetailFragment : Fragment() {
     }
 
     companion object {
-        private const val FLIPPER_CHILD_POSITION_LOADING = 0
-        private const val FLIPPER_CHILD_POSITION_DETAIL = 1
-        private const val FLIPPER_CHILD_POSITION_ERROR = 2
-        private const val FLIPPER_CHILD_POSITION_EMPTY = 3
+        private const val FLIPPER_DETAIL_CHILD_LOADING = 0
+        private const val FLIPPER_DETAIL_CHILD_DETAIL = 1
+        private const val FLIPPER_DETAIL_CHILD_ERROR = 2
+        private const val FLIPPER_DETAIL_CHILD_EMPTY = 3
 
-        private const val FLIPPER_FAVORITE_CHILD_POSITION_IMAGE = 0
-        private const val FLIPPER_FAVORITE_CHILD_POSITION_LOADING = 1
+        private const val FLIPPER_FAVORITE_CHILD_IMAGE = 0
+        private const val FLIPPER_FAVORITE_CHILD_LOADING = 1
     }
 }
