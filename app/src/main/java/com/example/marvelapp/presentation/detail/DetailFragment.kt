@@ -1,15 +1,16 @@
 package com.example.marvelapp.presentation.detail
 
 import android.os.Bundle
-import android.transition.TransitionInflater
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
+import androidx.transition.TransitionInflater
 import com.example.marvelapp.databinding.FragmentDetailBinding
 import com.example.marvelapp.framework.imageloader.ImageLoader
+import com.example.marvelapp.presentation.extensions.showShortToast
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -17,14 +18,14 @@ import javax.inject.Inject
 class DetailFragment : Fragment() {
 
     private var _binding: FragmentDetailBinding? = null
-    private val binding get() = _binding!!
+    private val binding: FragmentDetailBinding get() = _binding!!
 
     private val viewModel: DetailViewModel by viewModels()
 
-    private val args by navArgs<DetailFragmentArgs>()
-
     @Inject
     lateinit var imageLoader: ImageLoader
+
+    private val args by navArgs<DetailFragmentArgs>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
         FragmentDetailBinding
@@ -46,42 +47,78 @@ class DetailFragment : Fragment() {
 
         setSharedElementTransitionOnEnter()
 
-        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
-            // ViewFlipper
-            binding.flipperDetail.displayedChild =
-                // States
-                when (uiState) {
-                    DetailViewModel.UiState.Loading -> {
-                        FLIPPER_CHILD_POSITION_LOADING
-                    }
+        loadCategoriesAndObserveUiState(detailViewArg)
 
-                    is DetailViewModel.UiState.Success -> {
-                        binding.recyclerParentDetail.run {
-                            setHasFixedSize(true)
-                            adapter = DetailParentAdapter(uiState.detailParentList, imageLoader)
-                        }
-                        FLIPPER_CHILD_POSITION_DETAIL
-                    }
-
-                    DetailViewModel.UiState.Empty -> {
-                        FLIPPER_CHILD_POSITION_ERROR
-                    }
-
-                    DetailViewModel.UiState.Error -> {
-                        binding.includeErrorView.buttonRetry.setOnClickListener {
-                            viewModel.getCharacterCategories(detailViewArg.characterId)
-                        }
-                        FLIPPER_CHILD_POSITION_EMPTY
-                    }
-                }
-        }
-
-        viewModel.getCharacterCategories(detailViewArg.characterId)
+        setAndObserveFavoriteUiState(detailViewArg)
     }
 
-    override fun onDestroyView() {
-        _binding = null
-        super.onDestroyView()
+    private fun loadCategoriesAndObserveUiState(detailViewArg: DetailViewArg) {
+        viewModel.categories
+            .run {
+                actionLoad(detailViewArg.characterId)
+
+                state.observe(viewLifecycleOwner) { uiState ->
+                    // ViewFlipper
+                    binding.flipperDetail.displayedChild =
+                        // State
+                        when (uiState) {
+                            CategoriesUiActionStateLiveData.UiState.Loading -> {
+                                FLIPPER_DETAIL_CHILD_LOADING
+                            }
+
+                            is CategoriesUiActionStateLiveData.UiState.Success -> {
+                                binding.recyclerParentDetail.run {
+                                    setHasFixedSize(true)
+                                    adapter = DetailParentAdapter(uiState.detailParentList, imageLoader)
+                                }
+                                FLIPPER_DETAIL_CHILD_DETAIL
+                            }
+
+                            CategoriesUiActionStateLiveData.UiState.Error -> {
+                                binding.includeErrorView.buttonRetry.setOnClickListener {
+                                    viewModel.categories.actionLoad(detailViewArg.characterId)
+                                }
+                                FLIPPER_DETAIL_CHILD_ERROR
+                            }
+
+                            CategoriesUiActionStateLiveData.UiState.Empty -> {
+                                FLIPPER_DETAIL_CHILD_EMPTY
+                            }
+                        }
+                }
+            }
+    }
+
+    private fun setAndObserveFavoriteUiState(detailViewArg: DetailViewArg) {
+        viewModel.favorite
+            .run {
+                actionCheckFavorite(detailViewArg.characterId)
+
+                binding.imageFavoriteIcon.setOnClickListener {
+                    actionUpdateFavorite(detailViewArg)
+                }
+
+                state.observe(viewLifecycleOwner) { uiState ->
+                    // ViewFlipper
+                    binding.flipperFavorite.displayedChild =
+                        // State
+                        when (uiState) {
+                            FavoriteUiActionStateLiveData.UiState.Loading -> {
+                                FLIPPER_FAVORITE_CHILD_LOADING
+                            }
+
+                            is FavoriteUiActionStateLiveData.UiState.Icon -> {
+                                binding.imageFavoriteIcon.setImageResource(uiState.icon)
+                                FLIPPER_FAVORITE_CHILD_IMAGE
+                            }
+
+                            is FavoriteUiActionStateLiveData.UiState.Error -> {
+                                showShortToast(uiState.messageResId)
+                                FLIPPER_FAVORITE_CHILD_IMAGE
+                            }
+                        }
+                }
+            }
     }
 
     // Define a animação da transição como "move"
@@ -94,10 +131,18 @@ class DetailFragment : Fragment() {
             }
     }
 
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
+    }
+
     companion object {
-        private const val FLIPPER_CHILD_POSITION_LOADING = 0
-        private const val FLIPPER_CHILD_POSITION_DETAIL = 1
-        private const val FLIPPER_CHILD_POSITION_ERROR = 2
-        private const val FLIPPER_CHILD_POSITION_EMPTY = 3
+        private const val FLIPPER_DETAIL_CHILD_LOADING = 0
+        private const val FLIPPER_DETAIL_CHILD_DETAIL = 1
+        private const val FLIPPER_DETAIL_CHILD_ERROR = 2
+        private const val FLIPPER_DETAIL_CHILD_EMPTY = 3
+
+        private const val FLIPPER_FAVORITE_CHILD_IMAGE = 0
+        private const val FLIPPER_FAVORITE_CHILD_LOADING = 1
     }
 }

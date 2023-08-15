@@ -15,6 +15,9 @@ import javax.inject.Inject
 
 interface GetCharacterCategoriesUseCase {
 
+    //
+    // operator : nos permite suprimir o .invoke na chamada do método.
+    //
     operator fun invoke(params: GetCategoriesParams): Flow<ResultStatus<Pair<List<Comic>, List<Event>>>>
 
     data class GetCategoriesParams(val characterId: Int)
@@ -23,8 +26,8 @@ interface GetCharacterCategoriesUseCase {
 class GetCharacterCategoriesUseCaseImpl @Inject constructor(
     private val repository: CharactersRepository,
     private val dispatchers: CoroutinesDispatchers,
-) : GetCharacterCategoriesUseCase,
-    UseCase<GetCategoriesParams, Pair<List<Comic>, List<Event>>>() {
+) : UseCase<GetCategoriesParams, Pair<List<Comic>, List<Event>>>(),
+    GetCharacterCategoriesUseCase {
 
     override suspend fun doWork(params: GetCategoriesParams): ResultStatus<Pair<List<Comic>, List<Event>>> {
         return withContext(dispatchers.io()) {

@@ -10,6 +10,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.marvelapp.R
 import com.example.marvelapp.extension.asJsonString
 import com.example.marvelapp.framework.di.BaseUrlModule
+import com.example.marvelapp.framework.di.CoroutinesModule
 import com.example.marvelapp.launchFragmentInHiltContainer
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -23,7 +24,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-@UninstallModules(BaseUrlModule::class)
+@UninstallModules(BaseUrlModule::class, CoroutinesModule::class)
 @HiltAndroidTest
 class CharactersFragmentTest {
 
@@ -43,7 +44,7 @@ class CharactersFragmentTest {
     @Test
     fun shouldShowCharacters_whenViewIsCreated() {
         //
-        // deve mostrar caracteres quando a exibição é criada
+        // deve mostrar Characters quando a exibição é criada
         //
 
         // Arrange
@@ -62,7 +63,7 @@ class CharactersFragmentTest {
     @Test
     fun shouldLoadMoreCharacters_whenNewPageIsRequested() {
         //
-        // deve carregar mais caracteres quando uma nova página for solicitada
+        // deve carregar mais Characters quando uma nova página for solicitada
         //
 
         // Arrange
