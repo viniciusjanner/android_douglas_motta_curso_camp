@@ -9,7 +9,6 @@ import com.example.core.data.DbConstants
 import com.example.marvelapp.framework.db.entity.FavoriteEntity
 import kotlinx.coroutines.flow.Flow
 
-@Suppress("unused")
 @Dao
 interface FavoriteDao {
 

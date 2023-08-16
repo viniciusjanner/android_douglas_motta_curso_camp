@@ -12,12 +12,11 @@ class DetailParentAdapter(
     private val imageLoader: ImageLoader,
 ) : RecyclerView.Adapter<DetailParentAdapter.DetailParentViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DetailParentViewHolder =
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         DetailParentViewHolder.create(parent, imageLoader)
 
-    override fun onBindViewHolder(holder: DetailParentViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: DetailParentViewHolder, position: Int) =
         holder.bind(detailParentList[position])
-    }
 
     override fun getItemCount(): Int = detailParentList.size
 
