@@ -15,4 +15,5 @@
         android:id="@+id/about"
         android:icon="@drawable/ic_info_menu_outlined"
         android:title="@string/app_menu_about" />
+
 </menu>
