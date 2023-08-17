@@ -10,12 +10,10 @@ inline fun <T : ListItem, VH : GenericViewHolder<T>> getGenericAdapterOf(
 
     return object : ListAdapter<T, VH>(diff) {
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
-            return createViewHolder(parent)
-        }
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH =
+            createViewHolder(parent)
 
-        override fun onBindViewHolder(holder: VH, position: Int) {
+        override fun onBindViewHolder(holder: VH, position: Int) =
             holder.bind(getItem(position))
-        }
     }
 }
