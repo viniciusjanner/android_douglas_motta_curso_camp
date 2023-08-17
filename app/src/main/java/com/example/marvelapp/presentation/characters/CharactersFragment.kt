@@ -13,6 +13,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import com.example.marvelapp.databinding.FragmentCharactersBinding
 import com.example.marvelapp.framework.imageloader.ImageLoader
+import com.example.marvelapp.presentation.characters.adapters.CharactersAdapter
+import com.example.marvelapp.presentation.characters.adapters.CharactersLoadMoreStateAdapter
+import com.example.marvelapp.presentation.characters.adapters.CharactersRefreshStateAdapter
 import com.example.marvelapp.presentation.detail.DetailViewArg
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -29,6 +32,22 @@ class CharactersFragment : Fragment() {
 
     @Inject
     lateinit var imageLoader: ImageLoader
+
+    private val headerAdapter: CharactersRefreshStateAdapter by lazy {
+        CharactersRefreshStateAdapter(
+            // Duas maneiras de fazer a chamada
+            // charactersAdapter.retry()
+            charactersAdapter::retry,
+        )
+    }
+
+    private val footerAdapter: CharactersLoadMoreStateAdapter by lazy {
+        CharactersLoadMoreStateAdapter(
+            // Duas maneiras de fazer a chamada
+            // charactersAdapter.retry()
+            charactersAdapter::retry,
+        )
+    }
 
     private val charactersAdapter: CharactersAdapter by lazy {
         CharactersAdapter(imageLoader) { character, view ->
@@ -87,13 +106,9 @@ class CharactersFragment : Fragment() {
         postponeEnterTransition()
         with(binding.recyclerCharacters) {
             setHasFixedSize(true)
-            adapter = charactersAdapter.withLoadStateFooter(
-                footer = CharactersLoadMoreStateAdapter(
-                    //
-                    // Duas maneiras de fazer a chamada
-                    // { charactersAdapter.retry() }
-                    charactersAdapter::retry,
-                ),
+            adapter = charactersAdapter.withLoadStateHeaderAndFooter(
+                header = headerAdapter,
+                footer = footerAdapter,
             )
             viewTreeObserver.addOnPreDrawListener {
                 startPostponedEnterTransition()
@@ -104,26 +119,52 @@ class CharactersFragment : Fragment() {
 
     private fun observeInitialLoadState() {
         lifecycleScope.launch {
-            // Adapter
             charactersAdapter.loadStateFlow.collectLatest { loadState ->
+                // Adapter Header
+                headerAdapter.loadState = loadState.mediator
+                    ?.refresh
+                    ?.takeIf {
+                        it is LoadState.Error && charactersAdapter.itemCount > 0
+                    } ?: loadState.prepend
+
                 // ViewFlipper
                 binding.flipperCharacters.displayedChild =
-                    // States
-                    when (loadState.refresh) {
-                        LoadState.Loading -> {
+                    //
+                    // mediator : é referente aos dados remotos.
+                    // source : é referente aos dados locais (Room).
+                    //
+                    when {
+                        loadState.mediator?.refresh is LoadState.Loading -> {
                             setShimmerVisibility(true)
                             FLIPPER_CHILD_LOADING
                         }
-                        is LoadState.NotLoading -> {
-                            setShimmerVisibility(false)
-                            FLIPPER_CHILD_CHARACTERS
-                        }
-                        is LoadState.Error -> {
+
+                        //
+                        // Se solicitamos dados remotos e obtemos erro e nao temos dados cacheados.
+                        //
+                        loadState.mediator?.refresh is LoadState.Error && charactersAdapter.itemCount == 0 -> {
                             setShimmerVisibility(false)
                             binding.includeErrorView.buttonRetry.setOnClickListener {
                                 charactersAdapter.retry()
                             }
                             FLIPPER_CHILD_ERROR
+                        }
+
+                        //
+                        // Sucesso! Buscamos os dados remotos e fizemos o cache local.
+                        //
+                        loadState.source.refresh is LoadState.NotLoading ||
+                            loadState.mediator?.refresh is LoadState.NotLoading -> {
+                            setShimmerVisibility(false)
+                            FLIPPER_CHILD_CHARACTERS
+                        }
+
+                        //
+                        // Casos desconhecidos.
+                        //
+                        else -> {
+                            setShimmerVisibility(false)
+                            FLIPPER_CHILD_CHARACTERS
                         }
                     }
             }

@@ -1,4 +1,4 @@
-package com.example.marvelapp.presentation.characters
+package com.example.marvelapp.presentation.characters.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -13,6 +13,7 @@ class CharactersLoadMoreStateViewHolder(
 ) : RecyclerView.ViewHolder(itemBinding.root) {
 
     private val progressLoadingMore = itemBinding.progressLoadingMore
+
     private val textTryAgain = itemBinding.textTryAgain.also {
         it.setOnClickListener {
             retry()
@@ -25,10 +26,14 @@ class CharactersLoadMoreStateViewHolder(
     }
 
     companion object {
-        fun create(parent: ViewGroup, retry: () -> Unit): CharactersLoadMoreStateViewHolder {
+        fun create(
+            parent: ViewGroup,
+            retry: () -> Unit,
+        ): CharactersLoadMoreStateViewHolder {
             val inflater = LayoutInflater.from(parent.context)
-            val itemBinding = ItemCharacterLoadMoreStateBinding
-                .inflate(inflater, parent, false)
+
+            val itemBinding = ItemCharacterLoadMoreStateBinding.inflate(inflater, parent, false)
+
             return CharactersLoadMoreStateViewHolder(itemBinding, retry)
         }
     }
