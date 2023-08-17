@@ -35,6 +35,16 @@ class CharactersFragment : Fragment() {
 
     private val headerAdapter: CharactersRefreshStateAdapter by lazy {
         CharactersRefreshStateAdapter(
+            // Duas maneiras de fazer a chamada
+            // charactersAdapter.retry()
+            charactersAdapter::retry,
+        )
+    }
+
+    private val footerAdapter: CharactersLoadMoreStateAdapter by lazy {
+        CharactersLoadMoreStateAdapter(
+            // Duas maneiras de fazer a chamada
+            // charactersAdapter.retry()
             charactersAdapter::retry,
         )
     }
@@ -98,12 +108,7 @@ class CharactersFragment : Fragment() {
             setHasFixedSize(true)
             adapter = charactersAdapter.withLoadStateHeaderAndFooter(
                 header = headerAdapter,
-                footer = CharactersLoadMoreStateAdapter(
-                    //
-                    // Duas maneiras de fazer a chamada
-                    // { charactersAdapter.retry() }
-                    charactersAdapter::retry,
-                ),
+                footer = footerAdapter,
             )
             viewTreeObserver.addOnPreDrawListener {
                 startPostponedEnterTransition()
@@ -114,7 +119,6 @@ class CharactersFragment : Fragment() {
 
     private fun observeInitialLoadState() {
         lifecycleScope.launch {
-            // Adapter Footer
             charactersAdapter.loadStateFlow.collectLatest { loadState ->
                 // Adapter Header
                 headerAdapter.loadState = loadState.mediator
@@ -125,13 +129,19 @@ class CharactersFragment : Fragment() {
 
                 // ViewFlipper
                 binding.flipperCharacters.displayedChild =
-                    // States
+                    //
+                    // mediator : é referente aos dados remotos.
+                    // source : é referente aos dados locais (Room).
+                    //
                     when {
                         loadState.mediator?.refresh is LoadState.Loading -> {
                             setShimmerVisibility(true)
                             FLIPPER_CHILD_LOADING
                         }
 
+                        //
+                        // Se solicitamos dados remotos e obtemos erro e nao temos dados cacheados.
+                        //
                         loadState.mediator?.refresh is LoadState.Error && charactersAdapter.itemCount == 0 -> {
                             setShimmerVisibility(false)
                             binding.includeErrorView.buttonRetry.setOnClickListener {
@@ -140,13 +150,18 @@ class CharactersFragment : Fragment() {
                             FLIPPER_CHILD_ERROR
                         }
 
-                        loadState.source.refresh
-                            is LoadState.NotLoading || loadState.mediator?.refresh
-                            is LoadState.NotLoading -> {
+                        //
+                        // Sucesso! Buscamos os dados remotos e fizemos o cache local.
+                        //
+                        loadState.source.refresh is LoadState.NotLoading ||
+                            loadState.mediator?.refresh is LoadState.NotLoading -> {
                             setShimmerVisibility(false)
                             FLIPPER_CHILD_CHARACTERS
                         }
 
+                        //
+                        // Casos desconhecidos.
+                        //
                         else -> {
                             setShimmerVisibility(false)
                             FLIPPER_CHILD_CHARACTERS

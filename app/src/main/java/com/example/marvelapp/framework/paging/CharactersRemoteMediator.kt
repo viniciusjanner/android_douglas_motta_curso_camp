@@ -13,6 +13,13 @@ import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
 
+//
+// A função principal de RemoteMediator é carregar mais dados da rede quando os Pager dados esgotarem
+// ou os dados existentes forem invalidados. Ele inclui um load() método que você deve substituir
+// para definir o comportamento de carregamento.
+//
+// Link: https://developer.android.com/topic/libraries/architecture/paging/v3-network-db#implement-remotemediator
+//
 @OptIn(ExperimentalPagingApi::class)
 class CharactersRemoteMediator @Inject constructor(
     private val query: String,
@@ -27,6 +34,7 @@ class CharactersRemoteMediator @Inject constructor(
     override suspend fun load(loadType: LoadType, state: PagingState<Int, CharacterEntity>): MediatorResult {
         return try {
             val offset = when (loadType) {
+                // Atualiza a lista
                 LoadType.REFRESH -> {
                     0 // Zero representa a página 1
                 }
@@ -38,10 +46,9 @@ class CharactersRemoteMediator @Inject constructor(
 
                 // Adiciona itens ao final da lista.
                 LoadType.APPEND -> {
-                    val remoteKey =
-                        database.withTransaction {
-                            remoteKeyDao.remoteKey()
-                        }
+                    val remoteKey = database.withTransaction {
+                        remoteKeyDao.remoteKey()
+                    }
 
                     if (remoteKey.nextOffset == null) {
                         return MediatorResult.Success(endOfPaginationReached = true)
@@ -57,10 +64,12 @@ class CharactersRemoteMediator @Inject constructor(
                 queries["nameStartsWith"] = query
             }
 
+            // Busca os dados
             val characterPaging = remoteDataSource.fetchCharacters(queries)
             val responseOffset = characterPaging.offset
             val totalCharacters = characterPaging.total
 
+            // Armazena os dados
             database.withTransaction {
                 if (loadType == LoadType.REFRESH) {
                     remoteKeyDao.clearAll()
@@ -79,11 +88,13 @@ class CharactersRemoteMediator @Inject constructor(
                             imageUrl = it.imageUrl,
                         )
                     }
-
                 characterDao.insertAll(charactersEntities)
             }
 
-            MediatorResult.Success(endOfPaginationReached = responseOffset >= totalCharacters)
+            // Verifica se a paginacao chegou ao fim
+            val endOf: Boolean = responseOffset >= totalCharacters
+
+            MediatorResult.Success(endOfPaginationReached = endOf)
         } catch (e: IOException) {
             MediatorResult.Error(e)
         } catch (e: HttpException) {
