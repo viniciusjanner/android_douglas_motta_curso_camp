@@ -6,7 +6,6 @@ import androidx.room.PrimaryKey
 import com.example.core.data.DbConstants
 import com.example.core.domain.model.Character
 
-@Suppress("unused")
 @Entity(tableName = DbConstants.FAVORITES_TABLE_NAME)
 data class FavoriteEntity(
     @PrimaryKey
@@ -18,7 +17,7 @@ data class FavoriteEntity(
     val imageUrl: String,
 )
 
-@Suppress("unused")
-fun List<FavoriteEntity>.toCharactersModel() = map {
-    Character(it.id, it.name, it.imageUrl)
-}
+fun List<FavoriteEntity>.toCharactersModel() =
+    map {
+        Character(it.id, it.name, it.imageUrl)
+    }
