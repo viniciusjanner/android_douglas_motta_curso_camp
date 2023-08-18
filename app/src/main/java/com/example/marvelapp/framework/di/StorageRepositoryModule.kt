@@ -18,7 +18,7 @@ interface StorageRepositoryModule {
     @Binds
     fun bindStorageRepository(repository: StorageRepositoryImpl): StorageRepository
 
-    @Singleton
     @Binds
+    @Singleton
     fun bindLocalDataSource(dataSource: DataStorePreferencesDataSource): StorageLocalDataSource
 }
