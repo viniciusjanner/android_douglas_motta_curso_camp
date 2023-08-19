@@ -11,7 +11,6 @@
     <string name="error_add_favorite">Error when trying to add favorite</string>
     <string name="error_remove_favorite">Error when trying to remove favorite</string>
 
-    <!-- App Menu -->
     <string name="app_menu_heroes">Heroes</string>
     <string name="app_menu_favorites">Favorites</string>
     <string name="app_menu_about">About</string>
@@ -27,16 +26,14 @@
     <string name="favorites_screen_title">Favorites</string>
     <string name="favorites_no_favorites_in_the_list">No heroes in the favorite list</string>
 
-    <!-- Ordering -->
     <string name="sort_order_by">Order by</string>
     <string name="sort_order_by_name">Name</string>
-    <string name="sort_order_by_modified">Modificado</string>
+    <string name="sort_order_by_modified">Modified</string>
     <string name="sort_order">Order</string>
     <string name="sort_order_ascending">Ascending</string>
     <string name="sort_order_descending">Descending</string>
     <string name="sort_apply">Apply</string>
 
-    <!-- About -->
     <string name="about_screen_title">About</string>
     <string name="about_attribution">Data provided by Marvel. © 2021 Marvel</string>
 

@@ -2,33 +2,44 @@ package com.example.marvelapp.presentation.characters
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
+import com.example.marvelapp.R
 import com.example.marvelapp.databinding.FragmentCharactersBinding
 import com.example.marvelapp.framework.imageloader.ImageLoader
 import com.example.marvelapp.presentation.characters.adapters.CharactersAdapter
 import com.example.marvelapp.presentation.characters.adapters.CharactersLoadMoreStateAdapter
 import com.example.marvelapp.presentation.characters.adapters.CharactersRefreshStateAdapter
 import com.example.marvelapp.presentation.detail.DetailViewArg
+import com.example.marvelapp.presentation.sort.SortFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@Suppress("TooManyFunctions")
 @AndroidEntryPoint
-class CharactersFragment : Fragment() {
+class CharactersFragment : Fragment(), SearchView.OnQueryTextListener, MenuItem.OnActionExpandListener {
 
     private var _binding: FragmentCharactersBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: CharactersViewModel by viewModels()
+
+    private lateinit var searchView: SearchView
 
     @Inject
     lateinit var imageLoader: ImageLoader
@@ -69,6 +80,11 @@ class CharactersFragment : Fragment() {
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
         FragmentCharactersBinding
             .inflate(inflater, container, false)
@@ -82,6 +98,7 @@ class CharactersFragment : Fragment() {
 
         initCharactersAdapter()
         observeInitialLoadState()
+        observeSortingData()
 
         viewModel.state.observe(viewLifecycleOwner) { uiState ->
             when (uiState) {
@@ -94,17 +111,13 @@ class CharactersFragment : Fragment() {
             }
         }
 
-        viewModel.searchCharacters()
-    }
-
-    override fun onDestroyView() {
-        _binding = null
-        super.onDestroyView()
+        viewModel.actionSearchCharacters()
     }
 
     private fun initCharactersAdapter() {
         postponeEnterTransition()
         with(binding.recyclerCharacters) {
+            // layoutManager?.scrollToPosition(0)
             setHasFixedSize(true)
             adapter = charactersAdapter.withLoadStateHeaderAndFooter(
                 header = headerAdapter,
@@ -156,6 +169,7 @@ class CharactersFragment : Fragment() {
                         loadState.source.refresh is LoadState.NotLoading ||
                             loadState.mediator?.refresh is LoadState.NotLoading -> {
                             setShimmerVisibility(false)
+                            binding.recyclerCharacters.layoutManager?.scrollToPosition(0)
                             FLIPPER_CHILD_CHARACTERS
                         }
 
@@ -172,15 +186,99 @@ class CharactersFragment : Fragment() {
     }
 
     private fun setShimmerVisibility(visibility: Boolean) {
-        binding.includeViewCharactersLoadingState
-            .shimmerCharacters.run {
-                isVisible = visibility
-                if (visibility) {
-                    startShimmer()
-                } else {
-                    stopShimmer()
-                }
+        binding.includeViewCharactersLoadingState.shimmerCharacters.run {
+            isVisible = visibility
+            if (visibility) {
+                startShimmer()
+            } else {
+                stopShimmer()
             }
+        }
+    }
+
+    private fun observeSortingData() {
+        val navBackStackEntry = findNavController().getBackStackEntry(R.id.charactersFragment)
+
+        val observer = LifecycleEventObserver { _, event ->
+            val isSortingApplied =
+                navBackStackEntry.savedStateHandle.contains(
+                    SortFragment.SORTING_APPLIED_BASK_STACK_KEY,
+                )
+
+            if (event == Lifecycle.Event.ON_RESUME && isSortingApplied) {
+                viewModel.actionApplySort()
+                navBackStackEntry.savedStateHandle.remove<Boolean>(
+                    SortFragment.SORTING_APPLIED_BASK_STACK_KEY,
+                )
+            }
+        }
+
+        navBackStackEntry.lifecycle.addObserver(observer)
+
+        viewLifecycleOwner.lifecycle.addObserver(
+            LifecycleEventObserver { _, event ->
+                if (event == Lifecycle.Event.ON_DESTROY) {
+                    navBackStackEntry.lifecycle.removeObserver(observer)
+                }
+            },
+        )
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_items_characters, menu)
+
+        val searchItem = menu.findItem(R.id.menuSearch)
+        searchView = searchItem.actionView as SearchView
+
+        searchItem.setOnActionExpandListener(this)
+
+        if (viewModel.currentSearchQuery.isNotEmpty()) {
+            searchItem.expandActionView()
+            searchView.setQuery(viewModel.currentSearchQuery, false)
+        }
+
+        searchView.run {
+            isSubmitButtonEnabled = true
+            setOnQueryTextListener(this@CharactersFragment)
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.menuSort -> {
+                findNavController().navigate(R.id.action_charactersFragment_to_sortFragment)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        return query?.let {
+            viewModel.currentSearchQuery = it
+            viewModel.actionSearchCharacters()
+            true
+        } ?: false
+    }
+
+    override fun onQueryTextChange(newText: String?): Boolean {
+        return true
+    }
+
+    override fun onMenuItemActionExpand(item: MenuItem): Boolean {
+        return true
+    }
+
+    override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
+        viewModel.closeSearch()
+        viewModel.actionSearchCharacters()
+        return true
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        searchView.setOnQueryTextListener(null)
+        _binding = null
     }
 
     companion object {
