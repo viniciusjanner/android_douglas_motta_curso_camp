@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -32,7 +33,7 @@ import javax.inject.Inject
 
 @Suppress("TooManyFunctions")
 @AndroidEntryPoint
-class CharactersFragment : Fragment(), SearchView.OnQueryTextListener, MenuItem.OnActionExpandListener {
+class CharactersFragment : Fragment(), SearchView.OnQueryTextListener, MenuProvider, MenuItem.OnActionExpandListener {
 
     private var _binding: FragmentCharactersBinding? = null
     private val binding get() = _binding!!
@@ -80,11 +81,6 @@ class CharactersFragment : Fragment(), SearchView.OnQueryTextListener, MenuItem.
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
         FragmentCharactersBinding
             .inflate(inflater, container, false)
@@ -99,6 +95,12 @@ class CharactersFragment : Fragment(), SearchView.OnQueryTextListener, MenuItem.
         initCharactersAdapter()
         observeInitialLoadState()
         observeSortingData()
+
+        //
+        // Quando o aplicativo estiver em onResume exibir os itens de menu.
+        //
+        val menuHost = requireActivity()
+        menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
 
         viewModel.state.observe(viewLifecycleOwner) { uiState ->
             when (uiState) {
@@ -169,7 +171,7 @@ class CharactersFragment : Fragment(), SearchView.OnQueryTextListener, MenuItem.
                         loadState.source.refresh is LoadState.NotLoading ||
                             loadState.mediator?.refresh is LoadState.NotLoading -> {
                             setShimmerVisibility(false)
-                            binding.recyclerCharacters.layoutManager?.scrollToPosition(0)
+                            // binding.recyclerCharacters.layoutManager?.scrollToPosition(0)
                             FLIPPER_CHILD_CHARACTERS
                         }
 
@@ -224,8 +226,8 @@ class CharactersFragment : Fragment(), SearchView.OnQueryTextListener, MenuItem.
         )
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_items_characters, menu)
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        menuInflater.inflate(R.menu.menu_items_characters, menu)
 
         val searchItem = menu.findItem(R.id.menuSearch)
         searchView = searchItem.actionView as SearchView
@@ -243,13 +245,13 @@ class CharactersFragment : Fragment(), SearchView.OnQueryTextListener, MenuItem.
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+        return when (menuItem.itemId) {
             R.id.menuSort -> {
                 findNavController().navigate(R.id.action_charactersFragment_to_sortFragment)
                 true
             }
-            else -> super.onOptionsItemSelected(item)
+            else -> false
         }
     }
 
