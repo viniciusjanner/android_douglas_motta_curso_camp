@@ -171,7 +171,7 @@ class CharactersFragment : Fragment(), SearchView.OnQueryTextListener, MenuProvi
                         loadState.source.refresh is LoadState.NotLoading ||
                             loadState.mediator?.refresh is LoadState.NotLoading -> {
                             setShimmerVisibility(false)
-                            binding.recyclerCharacters.layoutManager?.scrollToPosition(0)
+                            // binding.recyclerCharacters.layoutManager?.scrollToPosition(0)
                             FLIPPER_CHILD_CHARACTERS
                         }
 
