@@ -58,7 +58,7 @@ class CharactersFragmentTest {
         // Arrange
         server.enqueue(MockResponse().setBody("characters_p1.json".asJsonString()))
 
-        delay(500) // delay porque utilizamos cache.
+        delay(1500) // delay porque utilizamos cache.
 
         // Action
         onView(
@@ -82,7 +82,7 @@ class CharactersFragmentTest {
             enqueue(MockResponse().setBody("characters_p2.json".asJsonString()))
         }
 
-        delay(500) // delay porque utilizamos cache.
+        delay(1500) // delay porque utilizamos cache.
 
         // Action
         onView(
@@ -108,7 +108,7 @@ class CharactersFragmentTest {
         // Arrange
         server.enqueue(MockResponse().setResponseCode(404))
 
-        delay(500) // delay porque utilizamos cache.
+        delay(1500) // delay porque utilizamos cache.
 
         // Action
         onView(
