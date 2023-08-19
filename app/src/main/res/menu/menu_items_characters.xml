@@ -13,6 +13,6 @@
         android:id="@+id/menuSort"
         android:icon="@drawable/ic_sort"
         android:title="@string/menu_sort"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
 </menu>
