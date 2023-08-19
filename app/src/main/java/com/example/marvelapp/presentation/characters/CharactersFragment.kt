@@ -117,7 +117,7 @@ class CharactersFragment : Fragment(), SearchView.OnQueryTextListener, MenuItem.
     private fun initCharactersAdapter() {
         postponeEnterTransition()
         with(binding.recyclerCharacters) {
-            scrollToPosition(0)
+            // layoutManager?.scrollToPosition(0)
             setHasFixedSize(true)
             adapter = charactersAdapter.withLoadStateHeaderAndFooter(
                 header = headerAdapter,
@@ -169,6 +169,7 @@ class CharactersFragment : Fragment(), SearchView.OnQueryTextListener, MenuItem.
                         loadState.source.refresh is LoadState.NotLoading ||
                             loadState.mediator?.refresh is LoadState.NotLoading -> {
                             setShimmerVisibility(false)
+                            binding.recyclerCharacters.layoutManager?.scrollToPosition(0)
                             FLIPPER_CHILD_CHARACTERS
                         }
 
