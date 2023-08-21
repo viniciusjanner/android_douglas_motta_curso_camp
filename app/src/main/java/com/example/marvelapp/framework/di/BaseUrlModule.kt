@@ -11,7 +11,7 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(SingletonComponent::class)
 object BaseUrlModule {
 
-    @BaseUrl
     @Provides
+    @BaseUrl
     fun provideBaseUrl(): String = BuildConfig.BASE_URL
 }
