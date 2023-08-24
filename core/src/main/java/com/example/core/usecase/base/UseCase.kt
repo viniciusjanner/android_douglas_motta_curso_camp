@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 
 abstract class UseCase<in P, R> {
-
     //
     // operator : nos permite suprimir o .invoke na chamada do método.
     //
@@ -22,7 +21,6 @@ abstract class UseCase<in P, R> {
 }
 
 abstract class PagingUseCase<in P, R : Any> {
-
     //
     // operator : nos permite suprimir o .invoke na chamada do método.
     //
@@ -32,7 +30,6 @@ abstract class PagingUseCase<in P, R : Any> {
 }
 
 abstract class FlowUseCase<in P, R : Any> {
-
     //
     // operator : nos permite suprimir o .invoke na chamada do método.
     //

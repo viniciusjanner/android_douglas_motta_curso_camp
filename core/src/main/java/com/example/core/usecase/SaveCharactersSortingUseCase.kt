@@ -10,7 +10,6 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 interface SaveCharactersSortingUseCase {
-
     //
     // operator : nos permite suprimir o .invoke na chamada do método.
     //
