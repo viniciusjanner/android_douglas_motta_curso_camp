@@ -25,12 +25,12 @@ interface GetCharacterCategoriesUseCase {
 
 class GetCharacterCategoriesUseCaseImpl @Inject constructor(
     private val repository: CharactersRepository,
-    private val dispatchers: CoroutinesDispatchers,
+    private val coroutinesDispatchers: CoroutinesDispatchers,
 ) : UseCase<GetCategoriesParams, Pair<List<Comic>, List<Event>>>(),
     GetCharacterCategoriesUseCase {
 
     override suspend fun doWork(params: GetCategoriesParams): ResultStatus<Pair<List<Comic>, List<Event>>> {
-        return withContext(dispatchers.io()) {
+        return withContext(coroutinesDispatchers.io()) {
             val id = params.characterId
             val comicsDeferred: Deferred<List<Comic>> = async { repository.getComics(id) }
             val eventsDeferred: Deferred<List<Event>> = async { repository.getEvents(id) }

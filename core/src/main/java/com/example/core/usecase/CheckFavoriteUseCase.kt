@@ -20,12 +20,12 @@ interface CheckFavoriteUseCase {
 
 class CheckFavoriteUseCaseImpl @Inject constructor(
     private val favoritesRepository: FavoritesRepository,
-    private val dispatchers: CoroutinesDispatchers,
+    private val coroutinesDispatchers: CoroutinesDispatchers,
 ) : UseCase<CheckFavoriteUseCase.Params, Boolean>(),
     CheckFavoriteUseCase {
 
     override suspend fun doWork(params: CheckFavoriteUseCase.Params): ResultStatus<Boolean> {
-        return withContext(dispatchers.io()) {
+        return withContext(coroutinesDispatchers.io()) {
             val isFavorite = favoritesRepository.isFavorite(params.characterId)
             ResultStatus.Success(isFavorite)
         }

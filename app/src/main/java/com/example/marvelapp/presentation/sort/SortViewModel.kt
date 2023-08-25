@@ -7,7 +7,7 @@ import androidx.lifecycle.liveData
 import androidx.lifecycle.switchMap
 import com.example.core.usecase.GetCharactersSortingUseCase
 import com.example.core.usecase.SaveCharactersSortingUseCase
-import com.example.core.usecase.base.AppCoroutinesDispatchers
+import com.example.core.usecase.base.CoroutinesDispatchers
 import com.example.marvelapp.presentation.extensions.watchStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -16,7 +16,7 @@ import javax.inject.Inject
 class SortViewModel @Inject constructor(
     private val getCharactersSortingUseCase: GetCharactersSortingUseCase,
     private val saveCharactersSortingUseCase: SaveCharactersSortingUseCase,
-    private val coroutinesDispatchers: AppCoroutinesDispatchers,
+    private val coroutinesDispatchers: CoroutinesDispatchers,
 ) : ViewModel() {
 
     private val action = MutableLiveData<Action>()
@@ -63,6 +63,7 @@ class SortViewModel @Inject constructor(
     }
 
     sealed class UiState {
+
         data class SortingResult(val storedSorting: Pair<String, String>) : UiState()
 
         sealed class ApplyState : UiState() {
@@ -73,6 +74,7 @@ class SortViewModel @Inject constructor(
     }
 
     sealed class Action {
+
         object GetStoredSorting : Action()
 
         data class ApplySorting(val orderBy: String, val order: String) : Action()

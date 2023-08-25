@@ -21,16 +21,19 @@ class DataStorePreferencesDataSource @Inject constructor(
         name = StorageConstants.MARVEL_DATA_STORE_NAME,
     )
 
-    private val sortingKey: Preferences.Key<String> = stringPreferencesKey(StorageConstants.SORT_ORDER_BY_KEY)
+    private val sortingKey: Preferences.Key<String> =
+        stringPreferencesKey(StorageConstants.SORT_ORDER_BY_KEY)
 
-    override val sorting: Flow<String>
-        get() = context.dataStore.data.map { prefs ->
-            prefs[sortingKey] ?: ""
-        }
+    override val sortingFlow: Flow<String>
+        get() = context.dataStore
+            .data.map { prefs ->
+                prefs[sortingKey] ?: ""
+            }
 
     override suspend fun saveSorting(sorting: String) {
-        context.dataStore.edit { mutablePrefs ->
-            mutablePrefs[sortingKey] = sorting
-        }
+        context.dataStore
+            .edit { mutablePrefs ->
+                mutablePrefs[sortingKey] = sorting
+            }
     }
 }

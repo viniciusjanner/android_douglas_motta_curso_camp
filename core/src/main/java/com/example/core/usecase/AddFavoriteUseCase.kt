@@ -21,12 +21,12 @@ interface AddFavoriteUseCase {
 
 class AddFavoriteUseCaseImpl @Inject constructor(
     private val favoritesRepository: FavoritesRepository,
-    private val dispatchers: CoroutinesDispatchers,
+    private val coroutinesDispatchers: CoroutinesDispatchers,
 ) : UseCase<AddFavoriteUseCase.Params, Unit>(),
     AddFavoriteUseCase {
 
     override suspend fun doWork(params: AddFavoriteUseCase.Params): ResultStatus<Unit> {
-        return withContext(dispatchers.io()) {
+        return withContext(coroutinesDispatchers.io()) {
             favoritesRepository.saveFavorite(
                 Character(
                     params.characterId,
