@@ -30,7 +30,7 @@ class GetCharactersUseCaseImpl @Inject constructor(
 
     override fun createFlowObservable(params: GetCharactersParams): Flow<PagingData<Character>> {
         val orderBy = runBlocking {
-            storageRepository.sorting.first()
+            storageRepository.sortingFlow.first()
         }
         return charactersRepository.getCachedCharacters(params.query, orderBy, params.pagingConfig)
     }

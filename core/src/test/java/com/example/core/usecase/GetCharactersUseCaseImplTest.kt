@@ -54,7 +54,7 @@ class GetCharactersUseCaseImplTest {
             whenever(charactersRepository.getCachedCharacters(query, orderBy, pagingConfig))
                 .thenReturn(flowOf(fakePagingData))
 
-            whenever(storageRepository.sorting).thenReturn(flowOf(orderBy))
+            whenever(storageRepository.sortingFlow).thenReturn(flowOf(orderBy))
 
             val result = getCharactersUseCase.invoke(GetCharactersUseCase.GetCharactersParams(query, pagingConfig))
 
