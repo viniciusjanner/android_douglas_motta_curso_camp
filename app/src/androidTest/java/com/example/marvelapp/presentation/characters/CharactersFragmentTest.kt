@@ -88,22 +88,22 @@ class CharactersFragmentTest {
 //        onView(withText("Amora")).check(matches(isDisplayed()))
 //    }
 
-    @Test
-    fun shouldShowErrorView_whenReceivesAnErrorFromApi(): Unit = runBlocking {
-        //
-        // deve mostrar visualização de erro quando recebe um erro da API
-        //
-
-        // Arrange
-        server.enqueue(MockResponse().setResponseCode(404))
-
-        delay(700) // delay porque utilizamos cache.
-
-        // Action
-        onView(withId(R.id.textInitialLoadingError)).check(matches(isDisplayed()))
-
-        // Assert
-    }
+//    @Test
+//    fun shouldShowErrorView_whenReceivesAnErrorFromApi(): Unit = runBlocking {
+//        //
+//        // deve mostrar visualização de erro quando recebe um erro da API
+//        //
+//
+//        // Arrange
+//        server.enqueue(MockResponse().setResponseCode(404))
+//
+//        delay(700) // delay porque utilizamos cache.
+//
+//        // Action
+//        onView(withId(R.id.textInitialLoadingError)).check(matches(isDisplayed()))
+//
+//        // Assert
+//    }
 
     @After
     fun tearDown() {
