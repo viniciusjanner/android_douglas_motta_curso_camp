@@ -58,11 +58,7 @@ class CharactersFragmentTest {
         delay(700) // delay porque utilizamos cache.
 
         // Action
-        onView(
-            withId(R.id.recyclerCharacters),
-        ).check(
-            matches(isDisplayed()),
-        )
+        onView(withId(R.id.recyclerCharacters)).check(matches(isDisplayed()))
 
         // Assert
     }
@@ -89,11 +85,7 @@ class CharactersFragmentTest {
 //        )
 //
 //        // Assert
-//        onView(
-//            withText("Amora"),
-//        ).check(
-//            matches(isDisplayed()),
-//        )
+//        onView(withText("Amora")).check(matches(isDisplayed()))
 //    }
 
     @Test
@@ -108,11 +100,7 @@ class CharactersFragmentTest {
         delay(700) // delay porque utilizamos cache.
 
         // Action
-        onView(
-            withId(R.id.textInitialLoadingError),
-        ).check(
-            matches(isDisplayed()),
-        )
+        onView(withId(R.id.textInitialLoadingError)).check(matches(isDisplayed()))
 
         // Assert
     }
