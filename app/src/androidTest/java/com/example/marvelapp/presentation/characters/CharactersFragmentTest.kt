@@ -72,6 +72,8 @@ class CharactersFragmentTest {
         // deve carregar mais Characters quando uma nova página for solicitada
         //
 
+        delay(2000) // test delay
+
         // Arrange
         with(server) {
             enqueue(MockResponse().setBody("characters_p1.json".asJsonString()))
@@ -96,6 +98,8 @@ class CharactersFragmentTest {
         //
         // deve mostrar visualização de erro quando recebe um erro da API
         //
+
+        delay(2000) // test delay
 
         // Arrange
         server.enqueue(MockResponse().setResponseCode(404))
