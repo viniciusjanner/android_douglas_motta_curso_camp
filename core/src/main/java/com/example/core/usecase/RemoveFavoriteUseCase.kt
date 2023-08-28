@@ -21,12 +21,12 @@ interface RemoveFavoriteUseCase {
 
 class RemoveFavoriteUseCaseImpl @Inject constructor(
     private val favoritesRepository: FavoritesRepository,
-    private val dispatchers: CoroutinesDispatchers,
+    private val coroutinesDispatchers: CoroutinesDispatchers,
 ) : UseCase<RemoveFavoriteUseCase.Params, Unit>(),
     RemoveFavoriteUseCase {
 
     override suspend fun doWork(params: RemoveFavoriteUseCase.Params): ResultStatus<Unit> {
-        return withContext(dispatchers.io()) {
+        return withContext(coroutinesDispatchers.io()) {
             favoritesRepository.deleteFavorite(
                 Character(params.characterId, params.name, params.imageUrl),
             )

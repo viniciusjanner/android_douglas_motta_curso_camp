@@ -13,5 +13,5 @@ import dagger.hilt.components.SingletonComponent
 interface CoroutinesModule {
 
     @Binds
-    fun bindDispatchers(dispatchers: AppCoroutinesDispatchers): CoroutinesDispatchers
+    fun bindDispatchers(appCoroutinesDispatchers: AppCoroutinesDispatchers): CoroutinesDispatchers
 }

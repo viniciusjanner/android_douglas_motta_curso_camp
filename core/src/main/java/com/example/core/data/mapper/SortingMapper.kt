@@ -7,23 +7,23 @@ import javax.inject.Inject
 class SortingMapper @Inject constructor() {
 
     fun mapToPair(sorting: String): Pair<String, String> {
-        val nameAscending = SortingType.ORDER_BY_NAME.value to SortingType.ORDER_ASCENDING.value
-        val nameDescending = SortingType.ORDER_BY_NAME.value to SortingType.ORDER_DESCENDING.value
-        val modifiedAscending = SortingType.ORDER_BY_MODIFIED.value to SortingType.ORDER_ASCENDING.value
-        val modifiedDescending = SortingType.ORDER_BY_MODIFIED.value to SortingType.ORDER_DESCENDING.value
+        val pairNameAscending = SortingType.ORDER_BY_NAME.value to SortingType.ORDER_ASCENDING.value
+        val pairNameDescending = SortingType.ORDER_BY_NAME.value to SortingType.ORDER_DESCENDING.value
+        val pairModifiedAscending = SortingType.ORDER_BY_MODIFIED.value to SortingType.ORDER_ASCENDING.value
+        val pairModifiedDescending = SortingType.ORDER_BY_MODIFIED.value to SortingType.ORDER_DESCENDING.value
 
         return when (sorting) {
-            StorageConstants.ORDER_BY_NAME_ASCENDING -> nameAscending
-            StorageConstants.ORDER_BY_NAME_DESCENDING -> nameDescending
-            StorageConstants.ORDER_BY_MODIFIED_ASCENDING -> modifiedAscending
-            StorageConstants.ORDER_BY_MODIFIED_DESCENDING -> modifiedDescending
-            else -> nameAscending
+            StorageConstants.ORDER_BY_NAME_ASCENDING -> pairNameAscending
+            StorageConstants.ORDER_BY_NAME_DESCENDING -> pairNameDescending
+            StorageConstants.ORDER_BY_MODIFIED_ASCENDING -> pairModifiedAscending
+            StorageConstants.ORDER_BY_MODIFIED_DESCENDING -> pairModifiedDescending
+            else -> pairNameAscending
         }
     }
 
     fun mapFromPair(sortingPair: Pair<String, String>): String {
-        val orderBy = sortingPair.first
-        val order = sortingPair.second
+        val orderBy: String = sortingPair.first
+        val order: String = sortingPair.second
 
         return when (orderBy) {
             SortingType.ORDER_BY_NAME.value ->

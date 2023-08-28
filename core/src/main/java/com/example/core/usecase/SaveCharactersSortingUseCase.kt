@@ -10,7 +10,6 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 interface SaveCharactersSortingUseCase {
-
     //
     // operator : nos permite suprimir o .invoke na chamada do método.
     //
@@ -22,12 +21,12 @@ interface SaveCharactersSortingUseCase {
 class SaveCharactersSortingUseCaseImpl @Inject constructor(
     private val storageRepository: StorageRepository,
     private val sortingMapper: SortingMapper,
-    private val dispatchers: CoroutinesDispatchers,
+    private val coroutinesDispatchers: CoroutinesDispatchers,
 ) : UseCase<SaveCharactersSortingUseCase.Params, Unit>(),
     SaveCharactersSortingUseCase {
 
     override suspend fun doWork(params: SaveCharactersSortingUseCase.Params): ResultStatus<Unit> {
-        return withContext(dispatchers.io()) {
+        return withContext(coroutinesDispatchers.io()) {
             storageRepository.saveSorting(
                 sortingMapper.mapFromPair(params.sortingPair),
             )

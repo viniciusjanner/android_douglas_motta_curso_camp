@@ -14,12 +14,12 @@ interface GetFavoritesUseCase {
 
 class GetFavoritesUseCaseImpl @Inject constructor(
     private val favoritesRepository: FavoritesRepository,
-    private val dispatchers: CoroutinesDispatchers,
+    private val coroutinesDispatchers: CoroutinesDispatchers,
 ) : FlowUseCase<Unit, List<Character>>(),
     GetFavoritesUseCase {
 
     override suspend fun createFlowObservable(params: Unit): Flow<List<Character>> {
-        return withContext(dispatchers.io()) {
+        return withContext(coroutinesDispatchers.io()) {
             favoritesRepository.getAll()
         }
     }
